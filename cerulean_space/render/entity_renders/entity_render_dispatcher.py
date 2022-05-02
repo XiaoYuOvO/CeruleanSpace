@@ -1,5 +1,7 @@
 from typing import Dict, TypeVar, Any
 
+from pygame import Color
+
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
@@ -9,6 +11,7 @@ from cerulean_space.render.entity_renders.rock_renderer import RockRenderer
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.texture_manager import TextureManager
 from cerulean_space.render.world_renderer import WorldRenderer
+from cerulean_space.util.position_method import ABSOLUTE
 from cerulean_space.world.world import World
 
 
@@ -17,7 +20,9 @@ class EntityRenderDispatcher(WorldRenderer):
     def render(self, game_renderer: GameRenderer):
         # 遍历所有实体,找到对应的渲染器,进行渲染
         for entity in self.world.entities:
+            entity: Entity = entity
             self.renderers.get(type(entity)).render(entity, game_renderer)
+
 
     def __init__(self, world: World, texture_manager: TextureManager):
         super().__init__(world, texture_manager)

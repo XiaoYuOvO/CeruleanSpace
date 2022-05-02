@@ -13,3 +13,4 @@ class PositionMethod:
 
 ABSOLUTE = PositionMethod(lambda x, y, x_off, y_off: (x, y))
 RELATIVE = PositionMethod(lambda x, y, x_off, y_off: (x + x_off, y + y_off))
+Y_RELATIVE = PositionMethod(lambda x, y, x_off, y_off: (x, y + y_off))

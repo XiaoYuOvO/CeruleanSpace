@@ -1,12 +1,13 @@
+from typing import Tuple, overload
+
 import pygame
 from pygame._freetype import STYLE_DEFAULT
 from pygame.rect import Rect
 from pygame.surface import Surface
 
+from cerulean_space.constants import DEFAULT_FONT_NAME
 from cerulean_space.render.font_renderer import FontRenderer
 from cerulean_space.util.position_method import PositionMethod, RELATIVE
-
-default_font_name = "宋体"
 
 
 class GameRenderer:
@@ -15,12 +16,16 @@ class GameRenderer:
         # 设置绘制偏移,以模拟镜头移动效果
         self.draw_offset_x = 0
         self.draw_offset_y = 0
-        self.screen = pygame.display.set_mode((width, height))
-        self.font_renderer = FontRenderer(default_font_name)
+        self.screen = pygame.display.set_mode((width, height), flags=pygame.HWSURFACE | pygame.RESIZABLE)
+        pygame.display.set_caption("蔚蓝深空")
+        self.font_renderer = FontRenderer(DEFAULT_FONT_NAME)
 
     def set_draw_offset(self, x: int, y: int):
         self.draw_offset_x = x
         self.draw_offset_y = y
+
+    def draw_surface_on_rect(self, surface: Surface, rect: Rect):
+        self.screen.blit(surface, rect)
 
     def draw_surface_with_angle(self, surface: Surface, x: int, y: int, rotation: float,
                                 pos_method: PositionMethod = RELATIVE):
@@ -54,6 +59,19 @@ class GameRenderer:
 
     def clear_screen(self):
         self.screen.fill((255, 255, 255))
+
+    def draw_line(self, start_x: int, start_y: int, end_x: int, end_y: int, width: int = 1,
+                  color: pygame.Color = (255, 255, 255),
+                  pos_mehtod: PositionMethod = RELATIVE):
+        pygame.draw.line(self.screen, color,
+                         pos_mehtod.calc_draw_pos(start_x, start_y, self.draw_offset_x, self.draw_offset_y),
+                         pos_mehtod.calc_draw_pos(end_x, end_y, self.draw_offset_x, self.draw_offset_y),
+                         width)
+
+    def draw_line_by_point(self, start: Tuple[int, int], end: Tuple[int, int], width: int = 1,
+                           color: pygame.Color = (255, 255, 255),
+                           pos_mehtod: PositionMethod = RELATIVE):
+        self.draw_line(start[0], start[1], end[0], end[1], width, color, pos_mehtod)
 
     @staticmethod
     def update_screen():

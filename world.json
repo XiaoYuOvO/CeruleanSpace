@@ -1,0 +1,40 @@
+{
+  "entities": [
+    {
+      "type": "player",
+      "data": {
+        "velocity": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "forward_vec": 10.000000036882188,
+        "x": -9498.65402895694,
+        "y": 50433.97641350868,
+        "rotation": -3,
+        "tick_exist": 2852,
+        "mass": 1,
+        "removed": false,
+        "health": 20.0,
+        "push_strength": 2.0,
+        "fuel": 0
+      }
+    },
+    {
+      "type": "rock",
+      "data": {
+        "velocity": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "forward_vec": 0,
+        "x": 0.0,
+        "y": 500.0,
+        "rotation": 0.0,
+        "tick_exist": 2852,
+        "mass": 1,
+        "removed": false
+      }
+    }
+  ],
+  "wind_force": 0.0
+}

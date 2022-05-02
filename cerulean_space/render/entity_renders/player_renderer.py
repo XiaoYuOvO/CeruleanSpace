@@ -18,7 +18,7 @@ class PlayerRenderer(EntityRenderer[PlayerEntity]):
 
     def render(self, entity: PlayerEntity, game_renderer: GameRenderer) -> NoReturn:
         super().render(entity, game_renderer)
-        game_renderer.draw_string_at("Pos(" + entity.x.__str__() + " ," + entity.y.__str__() + ")", 0, 0,
+        game_renderer.draw_string_at("Pos(" + entity.get_x().__str__() + " ," + entity.get_y().__str__() + ")", 0, 0,
                                      20, Color(0, 0, 0), ABSOLUTE)
 
     def get_texture(self) -> Identifier:
