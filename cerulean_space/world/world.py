@@ -1,5 +1,5 @@
 from random import Random
-from typing import List, Any, NoReturn
+from typing import List, Any, NoReturn, Dict
 
 from pygame import Rect
 from pygame.draw_py import BoundingBox
@@ -9,26 +9,53 @@ from cerulean_space.entity.entity_types import EntityTypes, ENTITY_TYPES
 from cerulean_space.entity.player_entity import PlayerEntity
 
 
+class Coordinate:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __iter__(self):
+        return [self.x, self.y]
+
+
 class World:
     def __init__(self):
         # 实体列表,全部继承Entity,为防止循环引用,使用Any
+        """
+        :var self.rand :该世界的随机函数
+        :var self.wind_force todo
+        :var self.entities 该世界的实体列表
+        :var self.weight 该世界的宽度
+        :var self.height 该世界的高度
+
+        """
         self.rand = Random()
         self.wind_force = 0.0
         self.player = PlayerEntity(self)
-        self.entities: List[Entity] = list()
+        self.entities: Dict[Coordinate, Entity] = dict()
 
-    def add_entity(self, entity):
-        self.entities.append(entity)
+        self.weight = 100
+        self.height = 100000
+        self.part_height = int(self.height / 10)  # 基块大小
+        self.part_amount = 3  # 每个分块中实体生成数量基数
+
+    def add_entity(self, entity: Entity, coordinate: Coordinate):
+        if coordinate not in self.entities.keys():
+            self.entities[coordinate] = entity
+            entity.set_pos(tuple(coordinate))
 
     def tick(self):
-        for e in self.entities:
+        for c, e in self.entities.keys(), self.entities.values():
             e.tick()
             if e.removed:
-                self.entities.remove(e)
+                self.entities.pop(c)
 
     def get_collided_entity(self, entity) -> List:
         result = list()
-        for e in self.entities:
+        for e in self.entities.values():
             if e is not entity and entity.bounding_box.colliderect(e.bounding_box):
                 result.append(e)
         return result
@@ -47,7 +74,7 @@ class World:
     def write_world(self) -> dict:
         result = dict()
         entities = list()
-        for entity in self.entities:
+        for entity in self.entities.values():
             entities.append({
                 "type": entity.get_codec_name(),
                 "data": entity.write_to_json()
@@ -56,3 +83,16 @@ class World:
         result["wind_force"] = self.wind_force
         return result
 
+    def __get_random_coordinate(self, offset):
+        while True:
+            yield Coordinate(self.rand.randrange(0, 100), self.rand.randrange(offset, offset + self.part_height))
+
+    def create_world(self):
+        """
+        创建一个新的世界，按照世界高度划分区域并随机生成实体
+        :return:
+        """
+        for i in range(0, 9):
+            for each in self.__get_random_coordinate(self.part_height * i):
+                for _ in range(0, i * self.part_amount):
+                    self.add_entity(Entity(self), each)
