@@ -21,12 +21,12 @@ class CeruleanSpace:
         self.game_renderer = GameRenderer(settings.game_window_width, settings.game_window_height)
         self.keyboard = Keyboard()
         self.renderer_manager = RendererManager(self.game_renderer)
-        self.world = WorldStorage.read_world_from_file(settings.world_file)
-        # self.player = PlayerEntity(self.world)
-        # self.world.add_entity(self.player)
-        # testrock = RockEntity(self.world)
-        # testrock.set_pos((0, 500))
-        # self.world.add_entity(testrock)
+        self.world = World()
+        self.player = PlayerEntity(self.world)
+        self.world.add_entity(self.player)
+        testrock = RockEntity(self.world)
+        testrock.set_pos((0, 500))
+        self.world.add_entity(testrock)
         self.player = self.world.player
         self.renderer_manager.init_all_renders(self.world, self.player)
         self.register_key_callbacks(settings)
@@ -60,6 +60,7 @@ class CeruleanSpace:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            # if event.type == pygame.WINDOWRESIZED:
             # if event.type == pygame.KEYDOWN:
             #     self.keyboard.handle_key_event(event.key)
 

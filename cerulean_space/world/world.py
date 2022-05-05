@@ -35,27 +35,28 @@ class World:
         self.rand = Random()
         self.wind_force = 0.0
         self.player = PlayerEntity(self)
-        self.entities: Dict[Coordinate, Entity] = dict()
+        # 实体与坐标并无对应关系
+        self.entities: List[Entity] = list()
 
         self.weight = 100
         self.height = 100000
         self.part_height = int(self.height / 10)  # 基块大小
         self.part_amount = 3  # 每个分块中实体生成数量基数
 
-    def add_entity(self, entity: Entity, coordinate: Coordinate):
-        if coordinate not in self.entities.keys():
-            self.entities[coordinate] = entity
-            entity.set_pos(tuple(coordinate))
+    def add_entity(self, entity: Entity):
+        # if coordinate not in self.entities.keys():
+            self.entities.append(entity)
+            # entity.set_pos(tuple(coordinate))
 
     def tick(self):
-        for c, e in self.entities.keys(), self.entities.values():
+        for e in self.entities:
             e.tick()
             if e.removed:
-                self.entities.pop(c)
+                self.entities.remove(e)
 
     def get_collided_entity(self, entity) -> List:
         result = list()
-        for e in self.entities.values():
+        for e in self.entities:
             if e is not entity and entity.bounding_box.colliderect(e.bounding_box):
                 result.append(e)
         return result
@@ -74,7 +75,7 @@ class World:
     def write_world(self) -> dict:
         result = dict()
         entities = list()
-        for entity in self.entities.values():
+        for entity in self.entities:
             entities.append({
                 "type": entity.get_codec_name(),
                 "data": entity.write_to_json()
