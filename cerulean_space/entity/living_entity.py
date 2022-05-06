@@ -21,7 +21,8 @@ class LivingEntity(Entity, metaclass=abc.ABCMeta):
 
     def living_tick(self):
         super().living_tick()
-        if self.health < 0:
+        if self.health <= 0:
+            self.on_death()
             self.remove()
 
     def write_to_json(self) -> dict:
@@ -32,3 +33,6 @@ class LivingEntity(Entity, metaclass=abc.ABCMeta):
     def read_from_json(self, data: dict):
         super().read_from_json(data)
         self.health = data["health"]
+
+    def on_death(self):
+        pass

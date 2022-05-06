@@ -19,11 +19,12 @@ class UIRenderer(WorldRenderer):
 
     def render(self, game_renderer: GameRenderer):
         # 渲染玩家燃料条
-        fuel_bar_x = game_renderer.screen.get_width() - 20
+        fuel_bar_x = game_renderer.get_rendering_width() - 20
         fuel_bar_height = 900
-        fuel_bar_y = (game_renderer.screen.get_height() - fuel_bar_height) / 2
-        game_renderer.draw_surface_at(self.fuel_bar_texture, fuel_bar_x + 1, fuel_bar_y + self.fuel_bar_texture.get_height() / 2 - 8, ABSOLUTE)
-        game_renderer.draw_line(fuel_bar_x, fuel_bar_y + fuel_bar_height, fuel_bar_x,
+        fuel_bar_y = (game_renderer.get_rendering_height() - fuel_bar_height) / 2
+        game_renderer.draw_surface_at(self.fuel_bar_texture, fuel_bar_x + 1,
+                                      fuel_bar_y + self.fuel_bar_texture.get_height() / 2 - 8, ABSOLUTE)
+        game_renderer.draw_line(fuel_bar_x, round(fuel_bar_y + fuel_bar_height), fuel_bar_x,
                                 fuel_bar_y + (1 - self.player.fuel / self.player.get_max_fuel()) * fuel_bar_height, 10,
                                 Color(255, 20, 20), ABSOLUTE)
         # 渲染玩家血条

@@ -9,7 +9,7 @@ pygame.freetype.init()
 
 class FontRenderer:
     def __init__(self, font_name: str):
-        self.font: pygame.freetype.Font = pygame.freetype.SysFont(font_name, 10, False, False)
+        self.font: pygame.freetype.Font = pygame.freetype.Font(font_name, 10, False, False)
 
     def surface_from_font(self, content: str, size: float = 10, rotation: int = 0,
                           style: int = STYLE_DEFAULT,

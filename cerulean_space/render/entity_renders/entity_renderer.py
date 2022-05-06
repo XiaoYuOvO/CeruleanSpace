@@ -1,7 +1,7 @@
 import abc
 from typing import TypeVar, Generic, NoReturn
 
-from pygame import Color
+from pygame import Color, Surface
 
 from cerulean_space.entity.entity import Entity
 from cerulean_space.render.game_renderer import GameRenderer
@@ -15,9 +15,13 @@ class EntityRenderer(Generic[T], metaclass=abc.ABCMeta):
     def __init__(self, texture_manager: TextureManager):
         self.texture = texture_manager.load_or_get_texture(self.get_texture())
 
+    def preprocess_texture(self, entity: T, surface: Surface) -> Surface:
+        return surface
+
     def render(self, entity: T, game_renderer: GameRenderer) -> NoReturn:
         # 翻转游戏坐标系至渲染坐标系
-        game_renderer.draw_surface_with_angle(self.texture, entity.get_rendering_x(), entity.get_rendering_y(),
+        game_renderer.draw_surface_with_angle(self.preprocess_texture(entity, self.texture), entity.get_rendering_x(),
+                                              entity.get_rendering_y(),
                                               -entity.rotation)
         line_color = Color(0, 0, 0)
         render_bottom_left = (entity.bounding_box.bottomleft[0], -entity.bounding_box.bottomleft[1])

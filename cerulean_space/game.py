@@ -1,16 +1,18 @@
-import json
 import threading
+from random import Random
 
 import pygame.time
 
+from cerulean_space.constants import PLAYER_MAX_X
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
 from cerulean_space.input.keyboard import Keyboard
 from cerulean_space.io.world_storage import WorldStorage
-from cerulean_space.render.background_renderer import BackgroundRenderer
-from cerulean_space.render.renderer_manager import RendererManager
+from cerulean_space.render.game_over_screen import GameOverScreen
 from cerulean_space.render.game_renderer import GameRenderer
+from cerulean_space.render.renderer_manager import RendererManager
 from cerulean_space.settings.game_settings import GameSettings
+from cerulean_space.world.generation.world_generator import WorldGenerator
 from cerulean_space.world.world import World
 
 
@@ -18,15 +20,19 @@ class CeruleanSpace:
     def __init__(self, settings: GameSettings):
         self.running = False
         self.settings = settings
-        self.game_renderer = GameRenderer(settings.game_window_width, settings.game_window_height)
+        self.game_renderer: GameRenderer = GameRenderer(settings.game_window_width, settings.game_window_height)
         self.keyboard = Keyboard()
         self.renderer_manager = RendererManager(self.game_renderer)
-        self.world = World()
+        self.world = WorldGenerator.generate_world(Random(), self)
         self.player = PlayerEntity(self.world)
         self.world.add_entity(self.player)
-        testrock = RockEntity(self.world)
-        testrock.set_pos((0, 500))
-        self.world.add_entity(testrock)
+        # self.world.add_entity(self.player)
+        # testrock = RockEntity(self.world)
+        # testrock2 = RockEntity(self.world)
+        # testrock.set_pos((0, 500))
+        # testrock2.set_pos((0, 1000))
+        # self.world.add_entity(testrock2)
+        # self.world.add_entity(testrock)
         self.player = self.world.player
         self.renderer_manager.init_all_renders(self.world, self.player)
         self.register_key_callbacks(settings)
@@ -43,18 +49,18 @@ class CeruleanSpace:
 
     def start_world_tick(self):
         clock = pygame.time.Clock()
-        def tick_world_tick(self):
+
+        def tick_world_tick():
             while self.running:
                 self.keyboard.tick()
                 self.world.tick()
                 self.game_renderer.set_draw_offset(
-                    -self.player.get_rendering_x() + (
-                            self.game_renderer.screen.get_width() - self.player.get_bounding_box().left) / 2,
+                    PLAYER_MAX_X,
                     self.player.get_y() + (
-                            self.game_renderer.screen.get_height() - self.player.get_bounding_box().right) / 3 * 2)
+                            self.game_renderer.get_rendering_height() - self.player.get_bounding_box().right) / 3 * 2)
                 clock.tick(self.settings.game_tick_rate)
 
-        threading.Thread(target=tick_world_tick, args=(self,)).start()
+        threading.Thread(target=tick_world_tick, args=()).start()
 
     def handle_game_events(self):
         for event in pygame.event.get():
@@ -86,3 +92,10 @@ class CeruleanSpace:
         self.keyboard.register_key(game_settings.key_left, handle_key_left)
         self.keyboard.register_key(game_settings.key_right, handle_key_right)
         self.keyboard.register_key(game_settings.key_save_world, handle_save_world)
+
+    def game_win(self):
+        self.renderer_manager.switch_to_game_win_screen(self.world)
+        pass
+
+    def game_over(self):
+        self.renderer_manager.switch_to_game_over_screen(self.world)

@@ -240,13 +240,23 @@ class SettingWindows(Tk):
         height = Entry(self, textvariable=fps_value)
         height.grid(row=7, column=1)
 
-        Button(self, text="确定",
-               command=call_back(keys_list.get(forward.get()), keys_list.get(reward.get()), keys_list.get(left.get()),
-                                 keys_list.get(right.get()), keys_list.get(save.get()), int(fps.get()),
-                                 int(weight.get()), int(height.get())))
+        # Button(self, text="确定",
+        #        command=call_back(keys_list.get(forward.get()), keys_list.get(reward.get()), keys_list.get(left.get()),
+        #                          keys_list.get(right.get()), keys_list.get(save.get()), int(fps.get()),
+        #                          int(weight.get()), int(height.get())))
 
 
 if __name__ == '__main__':
-    w = SettingWindows()
-    w.setting()
+    w = Window()
+    # w.setting(None)
+    def none():
+        pass
+
+    dic = dict()
+    dic["NewGame"] = none
+    dic["Continue"] = none
+    dic["CheckRecord"] = none
+    dic["Setting"] = none
+
+    w.draw_mainmenu(dic)
     w.mainloop()

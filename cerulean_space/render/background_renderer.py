@@ -1,6 +1,6 @@
 import pygame.transform
 
-from cerulean_space.constants import RENDERING_SCALE
+from cerulean_space.constants import BACKGROUND_SCALE
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.texture_manager import TextureManager
 from cerulean_space.render.world_renderer import WorldRenderer
@@ -20,7 +20,7 @@ class BackgroundRenderer(WorldRenderer):
     def render(self, game_renderer: GameRenderer):
         # pygame.transform.
         texture_rect = self.texture.get_rect(top=self.texture_size[1],
-                                             y=round(((game_renderer.draw_offset_y * RENDERING_SCALE + game_renderer.screen.get_height()) - self.texture_size[1])),
+                                             y=round(((game_renderer.draw_offset_y * BACKGROUND_SCALE + game_renderer.screen.get_height()) - self.texture_size[1])),
                                              width=1920)
         game_renderer.draw_surface_on_rect(self.texture, texture_rect)
         pass

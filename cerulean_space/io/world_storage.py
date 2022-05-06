@@ -6,10 +6,10 @@ from cerulean_space.world.world import World
 
 class WorldStorage:
     @staticmethod
-    def read_world_from_file(filename: str) -> World:
+    def read_world_from_file(filename: str, game) -> World:
         file = open(filename, "r", encoding="utf-8")
         world_data: dict = json.load(file)
-        result: World = World()
+        result: World = World(game)
         result.read_world(world_data)
         file.close()
         return result

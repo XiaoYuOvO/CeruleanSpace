@@ -1,6 +1,7 @@
 from typing import TypeVar, Callable, Dict, Any
 
 from cerulean_space.entity.entity import Entity
+from cerulean_space.entity.plane_entity import PlaneEntity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
 
@@ -25,3 +26,4 @@ def register_entity_type(entity_class: type(T)):
 
 register_entity_type(PlayerEntity)
 register_entity_type(RockEntity)
+register_entity_type(PlaneEntity)

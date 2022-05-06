@@ -1,11 +1,11 @@
-from typing import Tuple, overload
+from typing import Tuple
 
 import pygame
 from pygame._freetype import STYLE_DEFAULT
 from pygame.rect import Rect
 from pygame.surface import Surface
 
-from cerulean_space.constants import DEFAULT_FONT_NAME, HEIGHT_ON_SCREEN
+from cerulean_space.constants import DEFAULT_FONT_NAME, RENDERING_WIDTH, RENDERING_HEIGHT
 from cerulean_space.render.font_renderer import FontRenderer
 from cerulean_space.util.position_method import PositionMethod, RELATIVE
 
@@ -20,7 +20,7 @@ class GameRenderer:
         pygame.display.set_caption("蔚蓝深空")
         self.render_scale = 1
         self.font_renderer = FontRenderer(DEFAULT_FONT_NAME)
-        self.canvas = Surface((1920, 1000))
+        self.canvas = Surface((RENDERING_WIDTH, RENDERING_HEIGHT))
 
     def set_draw_offset(self, x: int, y: int):
         self.draw_offset_x = x
@@ -75,8 +75,11 @@ class GameRenderer:
                            pos_mehtod: PositionMethod = RELATIVE):
         self.draw_line(start[0], start[1], end[0], end[1], width, color, pos_mehtod)
 
-    def recalc_render_scale(self):
-        self.render_scale = HEIGHT_ON_SCREEN / self.screen.get_height()
+    def get_rendering_width(self) -> int:
+        return self.canvas.get_width()
+
+    def get_rendering_height(self) -> int:
+        return self.canvas.get_height()
 
     def update_screen(self):
         resized = pygame.transform.scale(self.canvas, self.screen.get_size(), self.screen)

@@ -7,22 +7,11 @@ from pygame.draw_py import BoundingBox
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.entity_types import EntityTypes, ENTITY_TYPES
 from cerulean_space.entity.player_entity import PlayerEntity
-
-
-class Coordinate:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
-
-    def __iter__(self):
-        return [self.x, self.y]
+from cerulean_space.world.generation.entity_spawner import EntitySpawner
 
 
 class World:
-    def __init__(self):
+    def __init__(self, game_instance):
         # 实体列表,全部继承Entity,为防止循环引用,使用Any
         """
         :var self.rand :该世界的随机函数
@@ -42,17 +31,22 @@ class World:
         self.height = 100000
         self.part_height = int(self.height / 10)  # 基块大小
         self.part_amount = 3  # 每个分块中实体生成数量基数
+        self.game = game_instance
+        self.entity_spawner = EntitySpawner(self)
 
     def add_entity(self, entity: Entity):
-        # if coordinate not in self.entities.keys():
-            self.entities.append(entity)
-            # entity.set_pos(tuple(coordinate))
+        # if coordinate not in self.entities.key-s():
+        if type(entity) is PlayerEntity:
+            self.player = entity
+        self.entities.append(entity)
+        # entity.set_pos(tuple(coordinate))
 
     def tick(self):
         for e in self.entities:
             e.tick()
             if e.removed:
                 self.entities.remove(e)
+        self.entity_spawner.tick_spawn(self.player)
 
     def get_collided_entity(self, entity) -> List:
         result = list()
@@ -62,7 +56,7 @@ class World:
         return result
 
     def read_world(self, data: dict) -> NoReturn:
-        for entity_data in data.get("entities"): # entities: List[Dict[str,? extends Entity]]
+        for entity_data in data.get("entities"):  # entities: List[Dict[str,? extends Entity]]
             entity_type = ENTITY_TYPES.get(entity_data.get("type"))
             new_entity = entity_type.construct_entity(self)
             new_entity.read_from_json(entity_data.get("data"))
@@ -84,16 +78,11 @@ class World:
         result["wind_force"] = self.wind_force
         return result
 
-    def __get_random_coordinate(self, offset):
-        while True:
-            yield Coordinate(self.rand.randrange(0, 100), self.rand.randrange(offset, offset + self.part_height))
+    def add_spawn_entry(self, entry):
+        self.entity_spawner.spawn_list.append(entry)
 
-    def create_world(self):
-        """
-        创建一个新的世界，按照世界高度划分区域并随机生成实体
-        :return:
-        """
-        for i in range(0, 9):
-            for each in self.__get_random_coordinate(self.part_height * i):
-                for _ in range(0, i * self.part_amount):
-                    self.add_entity(Entity(self), each)
+    def game_win(self):
+        self.game.game_win()
+
+    def game_over(self):
+        self.game.game_over()

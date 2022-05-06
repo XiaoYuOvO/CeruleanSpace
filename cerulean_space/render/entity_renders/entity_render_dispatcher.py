@@ -3,9 +3,11 @@ from typing import Dict, TypeVar, Any
 from pygame import Color
 
 from cerulean_space.entity.entity import Entity
+from cerulean_space.entity.plane_entity import PlaneEntity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
 from cerulean_space.render.entity_renders.entity_renderer import EntityRenderer
+from cerulean_space.render.entity_renders.plane_renderer import PlaneRenderer
 from cerulean_space.render.entity_renders.player_renderer import PlayerRenderer
 from cerulean_space.render.entity_renders.rock_renderer import RockRenderer
 from cerulean_space.render.game_renderer import GameRenderer
@@ -23,7 +25,6 @@ class EntityRenderDispatcher(WorldRenderer):
             entity: Entity = entity
             self.renderers.get(type(entity)).render(entity, game_renderer)
 
-
     def __init__(self, world: World, texture_manager: TextureManager):
         super().__init__(world, texture_manager)
         self.renderers: Dict[Entity.__class__, EntityRenderer[Any]] = dict()
@@ -34,6 +35,7 @@ class EntityRenderDispatcher(WorldRenderer):
     def register_renderers(self, texture_manager: TextureManager):
         self.register_renderer(PlayerEntity, PlayerRenderer(texture_manager))
         self.register_renderer(RockEntity, RockRenderer(texture_manager))
+        self.register_renderer(PlaneEntity, PlaneRenderer(texture_manager))
         pass
 
     T = TypeVar("T", bound=Entity)
