@@ -27,6 +27,9 @@ class Entity(metaclass=abc.ABCMeta):
     def get_bounding_box(self) -> Rect:
         pass
 
+    def update_bounding_box(self):
+        self.bounding_box = self.get_bounding_box()
+
     def on_collided_with(self, other) -> NoReturn:
         pass
 

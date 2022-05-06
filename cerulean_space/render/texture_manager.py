@@ -16,7 +16,7 @@ class TextureManager:
         texture = self.textures.get(identifier, None)
         if texture is None:
             # 若材质未加载则从磁盘中加载
-            texture = pygame.image.load(self.texture_dir + "/" + identifier.name)
+            texture = pygame.image.load(self.texture_dir + "/" + identifier.name).convert_alpha()
             self.textures[identifier] = texture
         # 返回获得的材质
         return texture

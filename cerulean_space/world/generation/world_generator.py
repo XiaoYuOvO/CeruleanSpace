@@ -15,14 +15,15 @@ class WorldGenerator:
         def on_spawn(world: World, spawn_y):
             plane = PlaneEntity(world)
             if rand.randint(0, 1) == 0:
-                plane.velocity.x = rand.randint(5, 15)
+                plane.velocity.x = rand.randint(3, 10)
                 plane.set_pos((PLAYER_MIN_X, spawn_y))
                 plane.direction = DIRECTION_RIGHT
             else:
-                plane.velocity.x = -rand.randint(5, 15)
+                plane.velocity.x = -rand.randint(3, 10)
                 plane.set_pos((PLAYER_MAX_X, spawn_y))
                 plane.direction = DIRECTION_LEFT
             world.add_entity(plane)
+            print("Spawned entity: " + plane.__str__() + " at " + str(spawn_y))
 
         return on_spawn
 
@@ -30,20 +31,18 @@ class WorldGenerator:
     def create_rock_spawn_func(rand: Random) -> Callable[[World, int], None]:
         def on_spawn(world: World, spawn_y):
             rock = RockEntity(world)
-            if rand.randint(0, 1) == 0:
-                rock.velocity.x = rand.randint(5, 15)
-                rock.set_pos((PLAYER_MIN_X, spawn_y))
-            else:
-                rock.velocity.x = -rand.randint(5, 15)
-                rock.set_pos((PLAYER_MAX_X, spawn_y))
+            rock.velocity.y = -rand.randint(3, 10)
+            rock.set_pos((rand.randint(PLAYER_MIN_X, PLAYER_MAX_X), spawn_y))
+            rock.set_size(1 + rand.random() * 1.5)
             world.add_entity(rock)
+            print("Spawned entity: " + rock.__str__() + " at " + str(spawn_y))
 
         return on_spawn
 
     @staticmethod
     def generate_in_range(world: World, count: int, rand: Random, height_range: range,
                           entity_creating_func: Callable[[Random], Callable[[World, int], None]]):
-        each_distance = (height_range.start - height_range.stop) / count
+        each_distance = (height_range.stop - height_range.start) / count
         for i in range(1, count + 1):
             spawn_height = round(each_distance * i + rand.randint(-100, 100)) + height_range.start
             world.add_spawn_entry(SpawnEntry(spawn_height, entity_creating_func(rand)))
@@ -54,12 +53,13 @@ class WorldGenerator:
 
     @staticmethod
     def generate_rocks_in_middle_range(world: World, count: int, rand: Random):
-        WorldGenerator.generate_in_range(world, count, rand, range(12000, 22000), WorldGenerator.create_rock_spawn_func)
+        WorldGenerator.generate_in_range(world, count, rand, range(12000, 32000), WorldGenerator.create_rock_spawn_func)
 
     @staticmethod
     def generate_world(rand: Random, game) -> World:
         world = World(game)
-        WorldGenerator.generate_planes_in_low_range(world, 10, rand)
+        WorldGenerator.generate_planes_in_low_range(world, 20, rand)
+        WorldGenerator.generate_rocks_in_middle_range(world, 50, rand)
         # world.add_entity(PlayerEntity(world))
         return world
 
