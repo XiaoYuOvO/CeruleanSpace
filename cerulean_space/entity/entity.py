@@ -57,11 +57,11 @@ class Entity(metaclass=abc.ABCMeta):
     def get_y(self) -> float:
         return self.__y
 
-    def get_rendering_y(self) -> int:
-        return round(-self.__y)
+    def get_rendering_y(self):
+        return -self.__y
 
-    def get_rendering_x(self) -> int:
-        return round(self.__x)
+    def get_rendering_x(self):
+        return self.__x
 
     def living_tick(self):
         pass

@@ -3,11 +3,11 @@ from typing import Callable, Tuple
 
 
 class PositionMethod:
-    def __init__(self, calc: Callable[[int, int, int, int], Tuple[int, int]]):
+    def __init__(self, calc: Callable[[float, float, float, float], Tuple[float, float]]):
         self.method = calc
         pass
 
-    def calc_draw_pos(self, x: int, y: int, x_off: int, y_off: int) -> Tuple[int, int]:
+    def calc_draw_pos(self, x: float, y: float, x_off: float, y_off: float) -> Tuple[float, float]:
         return self.method(x, y, x_off, y_off)
 
 

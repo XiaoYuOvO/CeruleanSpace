@@ -5,15 +5,13 @@ import pygame.time
 
 from cerulean_space.constants import PLAYER_MAX_X
 from cerulean_space.entity.player_entity import PlayerEntity
-from cerulean_space.entity.rock_entity import RockEntity
 from cerulean_space.input.keyboard import Keyboard
 from cerulean_space.io.world_storage import WorldStorage
-from cerulean_space.render.game_over_screen import GameOverScreen
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.renderer_manager import RendererManager
 from cerulean_space.settings.game_settings import GameSettings
 from cerulean_space.world.generation.world_generator import WorldGenerator
-from cerulean_space.world.world import World
+lock = threading.Lock()
 
 
 class CeruleanSpace:
@@ -42,9 +40,11 @@ class CeruleanSpace:
         clock = pygame.time.Clock()
         self.start_world_tick()
         while self.running:
+            lock.acquire()
             self.renderer_manager.render()
             self.handle_game_events()
-            clock.tick(self.settings.game_tick_fps)
+            lock.release()
+            clock.tick(self.settings.game_tick_rate)
         pygame.quit()
 
     def start_world_tick(self):
@@ -52,12 +52,14 @@ class CeruleanSpace:
 
         def tick_world_tick():
             while self.running:
+                lock.acquire()
                 self.keyboard.tick()
                 self.world.tick()
                 self.game_renderer.set_draw_offset(
                     PLAYER_MAX_X,
                     self.player.get_y() + (
-                            self.game_renderer.get_rendering_height() - self.player.get_bounding_box().right) / 3 * 2)
+                            self.game_renderer.get_rendering_height()) / 4 * 3)
+                lock.release()
                 clock.tick(self.settings.game_tick_rate)
 
         threading.Thread(target=tick_world_tick, args=()).start()
@@ -95,7 +97,6 @@ class CeruleanSpace:
 
     def game_win(self):
         self.renderer_manager.switch_to_game_win_screen(self.world)
-        pass
 
     def game_over(self):
         self.renderer_manager.switch_to_game_over_screen(self.world)
