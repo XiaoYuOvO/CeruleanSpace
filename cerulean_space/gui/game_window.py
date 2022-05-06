@@ -3,8 +3,6 @@ import re
 import tkinter
 from tkinter.ttk import *
 from tkinter import *
-import pygame
-# from ..world.generation.world_generator import *
 from cerulean_space.settings.game_settings import *
 
 settings = GameSettings()
@@ -23,7 +21,7 @@ def scan_save():
         for each in file_names:
             if reg.match(each) is not None:
                 files.append(each)
-
+    print(files)
     return files
 
 
@@ -39,24 +37,26 @@ class Dialog(Tk):
         self.geometry("300x80")
         self.save_names = save_names
 
-    def get_name(self, name):
-        self.save_name = name
-        print(name)
-        return ""
+        self.name_of_save = StringVar()
+        self.name_of_save.set(self.save_name)
+        self.entry = Entry(self, textvariable=self.name_of_save)
+
+        self.com = Combobox(self, values=self.save_names)
+
+    def get_name(self):
+        if self.type == 0:
+            self.save_name = self.name_of_save.get()
+        else:
+            self.save_name = self.com.get()
+        self.quit()
 
     def draw(self):
         if self.type == 0:
-            save_name = StringVar()
-            save_name.set(self.save_name)
-            entry = Entry(self, textvariable=save_name)
-            entry.pack()
-
-            Button(self, text="新游戏", command=self.get_name(save_name.get()), font=("Calibri", 15)).pack()
+            self.entry.pack()
+            Button(self, text="新游戏", command=self.get_name, font=("Calibri", 15)).pack()
         else:
-            com = Combobox(self, textvariable=self.save_names)
-            com.pack()
-
-            Button(self, text="继续游戏", command=self.get_name(com.get()), font=("Calibri", 15)).pack()
+            self.com.pack()
+            Button(self, text="继续游戏", command=self.get_name, font=("Calibri", 15)).pack()
 
 
 class Window(Tk):
@@ -64,6 +64,8 @@ class Window(Tk):
         super().__init__()
         self.title("CeruleanSpace")
         self.geometry("480x300")
+
+        self.save_name = ''
         # todo 窗体的iron
 
     def draw_mainmenu(self, call_backs):
@@ -321,7 +323,7 @@ class SettingWindows(Tk):
 
 
 if __name__ == '__main__':
-    w = Dialog(0)
+    w = Dialog(1, save_names=scan_save())
 
     def none():
         pass
