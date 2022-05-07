@@ -19,12 +19,12 @@ class PlayerEntity(LivingEntity):
     def __init__(self, world):
         super().__init__(world)
         self.push_strength = 1.5
-        self.min_speed = 1.5
+        self.min_speed = 2.5
         self.fuel = self.get_max_fuel()
         self.max_rotation = 30
 
     def get_max_fuel(self) -> int:
-        return 150
+        return 250
 
     def living_tick(self):
         super().living_tick()

@@ -1,3 +1,4 @@
+from random import Random
 from typing import NoReturn
 
 from pygame import Rect
@@ -5,6 +6,8 @@ from pygame.draw_py import BoundingBox
 
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.player_entity import PlayerEntity
+from cerulean_space.render.particle.particle_parameter import ParticleParameter
+from cerulean_space.render.particle.particle_types import ROCK_CHUNK
 
 
 class RockEntity(Entity):
@@ -23,6 +26,14 @@ class RockEntity(Entity):
     def on_collided_with(self, other) -> NoReturn:
         if type(other) is PlayerEntity:
             other.damage(5 * self.__size)
+            count = round(2 * self.__size)
+            rand: Random = self.world.rand
+            for i in range(-count, count):
+                self.world.add_particle(ROCK_CHUNK,
+                                        ParticleParameter(self.get_x(), self.get_y(),
+                                                          self.velocity.rotate(10 * i + rand.randint(-10, 10)) * (
+                                                              rand.random()),
+                                                          40))
             self.remove()
 
     def set_size(self, size: float):

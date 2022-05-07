@@ -45,6 +45,7 @@ class CeruleanSpace:
             self.handle_game_events()
             lock.release()
             clock.tick(self.settings.game_tick_rate)
+            pygame.display.set_caption("蔚蓝浩空 " + clock.get_fps().__str__())
         pygame.quit()
 
     def start_world_tick(self):
