@@ -22,7 +22,7 @@ class RockEntity(Entity):
 
     def on_collided_with(self, other) -> NoReturn:
         if type(other) is PlayerEntity:
-            other.damage(5)
+            other.damage(5 * self.__size)
             self.remove()
 
     def set_size(self, size: float):

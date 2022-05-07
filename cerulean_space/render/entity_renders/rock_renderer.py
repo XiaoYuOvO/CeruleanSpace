@@ -12,8 +12,8 @@ class RockRenderer(EntityRenderer[RockEntity]):
     def preprocess_texture(self, entity: RockEntity, surface: Surface) -> Surface:
         # self.texture.set_colorkey((255, 255, 255))
         result = Surface(entity.bounding_box.size)
-        # result.fill((255, 255, 255))
-        result = pygame.transform.scale(self.texture, entity.bounding_box.size, result)
+        result.fill((255, 255, 255))
+        pygame.transform.scale(self.texture, entity.bounding_box.size, result)
         result.set_colorkey((255, 255, 255))
         # result = result.convert_alpha()
         return result

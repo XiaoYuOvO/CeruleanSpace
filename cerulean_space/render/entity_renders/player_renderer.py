@@ -1,6 +1,6 @@
 from typing import NoReturn
 
-from pygame import Color
+from pygame import Color, Surface
 
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.render.entity_renders.entity_renderer import EntityRenderer
@@ -15,6 +15,7 @@ player_texture = Identifier("player.png")
 class PlayerRenderer(EntityRenderer[PlayerEntity]):
     def __init__(self, texture_manager: TextureManager):
         super().__init__(texture_manager)
+        # self.texture.subsurface()
 
     def render(self, entity: PlayerEntity, game_renderer: GameRenderer) -> NoReturn:
         super().render(entity, game_renderer)
@@ -23,3 +24,6 @@ class PlayerRenderer(EntityRenderer[PlayerEntity]):
 
     def get_texture(self) -> Identifier:
         return player_texture
+
+    def preprocess_texture(self, entity: PlayerEntity, surface: Surface) -> Surface:
+        return surface

@@ -18,8 +18,8 @@ class PlayerEntity(LivingEntity):
 
     def __init__(self, world):
         super().__init__(world)
-        self.push_strength = 2.0
-        self.min_speed = 3.0
+        self.push_strength = 1.5
+        self.min_speed = 1.5
         self.fuel = self.get_max_fuel()
         self.max_rotation = 30
 

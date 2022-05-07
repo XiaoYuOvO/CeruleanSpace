@@ -1,11 +1,11 @@
 from typing import Dict, TypeVar, Any
 
-from pygame import Color
-
+from cerulean_space.entity.cloud_entity import CloudEntity
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.plane_entity import PlaneEntity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
+from cerulean_space.render.entity_renders.cloud_renderer import CloudRenderer
 from cerulean_space.render.entity_renders.entity_renderer import EntityRenderer
 from cerulean_space.render.entity_renders.plane_renderer import PlaneRenderer
 from cerulean_space.render.entity_renders.player_renderer import PlayerRenderer
@@ -13,7 +13,6 @@ from cerulean_space.render.entity_renders.rock_renderer import RockRenderer
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.texture_manager import TextureManager
 from cerulean_space.render.world_renderer import WorldRenderer
-from cerulean_space.util.position_method import ABSOLUTE
 from cerulean_space.world.world import World
 
 
@@ -36,6 +35,7 @@ class EntityRenderDispatcher(WorldRenderer):
         self.register_renderer(PlayerEntity, PlayerRenderer(texture_manager))
         self.register_renderer(RockEntity, RockRenderer(texture_manager))
         self.register_renderer(PlaneEntity, PlaneRenderer(texture_manager))
+        self.register_renderer(CloudEntity, CloudRenderer(texture_manager))
         pass
 
     T = TypeVar("T", bound=Entity)

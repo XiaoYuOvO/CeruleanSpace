@@ -14,22 +14,22 @@ class GameRenderer:
     def __init__(self, width: int, height: int):
         pygame.init()
         # 设置绘制偏移,以模拟镜头移动效果
-        self.draw_offset_x = 0
-        self.draw_offset_y = 0
+        self.draw_offset_x: float = 0
+        self.draw_offset_y: float = 0
         self.screen = pygame.display.set_mode((width, height), flags=pygame.HWSURFACE | pygame.RESIZABLE)
         pygame.display.set_caption("蔚蓝深空")
         self.render_scale = 1
         self.font_renderer = FontRenderer(DEFAULT_FONT_NAME)
         self.canvas = Surface((RENDERING_WIDTH, RENDERING_HEIGHT))
 
-    def set_draw_offset(self, x: int, y: int):
+    def set_draw_offset(self, x, y):
         self.draw_offset_x = x
         self.draw_offset_y = y
 
     def draw_surface_on_rect(self, surface: Surface, rect: Rect):
         self.canvas.blit(surface, rect)
 
-    def draw_surface_with_angle(self, surface: Surface, x: int, y: int, rotation: float,
+    def draw_surface_with_angle(self, surface: Surface, x, y, rotation: float,
                                 pos_method: PositionMethod = RELATIVE):
         img_copy = pygame.transform.rotate(surface, rotation)
         rotated_rect = img_copy.get_rect(
@@ -37,7 +37,7 @@ class GameRenderer:
         self.canvas.blit(img_copy, rotated_rect)
 
     # 在屏幕上绘制字符串,字符串图像的中心点为(x,y)
-    def draw_string_centered(self, content: str, x: int, y: int, size: float = 10,
+    def draw_string_centered(self, content: str, x, y, size: float = 10,
                              color: pygame.Color = (255, 255, 255),
                              pos_method: PositionMethod = RELATIVE,
                              rotation: int = 0,
@@ -55,7 +55,7 @@ class GameRenderer:
         self.draw_surface_at(text_surface, round(x + text_bounds.width / 2), round(y + text_bounds.height / 2),
                              pos_method)
 
-    def draw_surface_at(self, surface: Surface, x: int, y: int,
+    def draw_surface_at(self, surface: Surface, x, y,
                         pos_method: PositionMethod = RELATIVE):
         self.draw_surface_with_angle(surface, x, y, 0, pos_method)
 
