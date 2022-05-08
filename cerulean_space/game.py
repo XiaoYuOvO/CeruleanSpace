@@ -1,3 +1,4 @@
+import os.path
 import threading
 from random import Random
 
@@ -11,6 +12,7 @@ from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.renderer_manager import RendererManager
 from cerulean_space.settings.game_settings import GameSettings
 from cerulean_space.world.generation.world_generator import WorldGenerator
+
 lock = threading.Lock()
 
 
@@ -21,9 +23,12 @@ class CeruleanSpace:
         self.game_renderer: GameRenderer = GameRenderer(settings.game_window_width, settings.game_window_height)
         self.keyboard = Keyboard()
         self.renderer_manager = RendererManager(self.game_renderer)
-        self.world = WorldGenerator.generate_world(Random(), self)
-        self.player = PlayerEntity(self.world)
-        self.world.add_entity(self.player)
+        if os.path.exists(settings.world_file):
+            self.world = WorldStorage.read_world_from_file(settings.world_file, self)
+        else:
+            self.world = WorldGenerator.generate_world(Random(), self)
+            self.player = PlayerEntity(self.world)
+            self.world.add_entity(self.player)
         # self.world.add_entity(self.player)
         # testrock = RockEntity(self.world)
         # testrock2 = RockEntity(self.world)
@@ -59,7 +64,7 @@ class CeruleanSpace:
                 self.game_renderer.set_draw_offset(
                     PLAYER_MAX_X,
                     self.player.get_y() + (
-                            self.game_renderer.get_rendering_height()) / 4 * 3)
+                        self.game_renderer.get_rendering_height()) / 4 * 3)
                 lock.release()
                 clock.tick(self.settings.game_tick_rate)
 

@@ -1,3 +1,4 @@
+from random import Random
 from typing import List
 
 from cerulean_space.constants import RENDERING_HEIGHT
@@ -10,8 +11,8 @@ class EntitySpawner:
         self.world = world
         self.spawn_list: List = list()
 
-    def tick_spawn(self, player: PlayerEntity):
+    def tick_spawn(self, rand: Random, player: PlayerEntity):
         for entry in self.spawn_list:
             if entry.spawn_y <= player.get_y() + RENDERING_HEIGHT:
-                entry.on_spawn(self.world, entry.spawn_y)
+                entry.factory.on_spawn(self.world, rand, entry.spawn_y)
                 self.spawn_list.remove(entry)
