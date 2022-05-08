@@ -33,7 +33,6 @@ def new_dialog():
     d = Dialog(0)
     d.draw()
     d.mainloop()
-    name_of_save = d.save_name
 
     settings.set_save_path(name_of_save)
     CeruleanSpace(settings).start_game_loop()
@@ -43,7 +42,6 @@ def continue_dialog():
     global name_of_save
     d = Dialog(1)
     d.mainloop()
-    name_of_save = d.save_name
 
 
 def setting_dialog():
@@ -55,7 +53,6 @@ def setting_dialog():
 class Dialog(Tk):
     # new_code = 0
     # continue_code = 1
-    save_name = "NewGame"
 
     def __init__(self, code, save_names=None):
         super().__init__()
@@ -64,17 +61,18 @@ class Dialog(Tk):
         self.geometry("300x80")
         self.save_names = save_names
 
-        self.name_of_save = StringVar()
-        self.name_of_save.set(self.save_name)
-        self.entry = Entry(self, textvariable=self.name_of_save)
+        self.save_name = StringVar()
+        self.save_name.set(name_of_save)
+        self.entry = Entry(self, textvariable=self.save_name)
 
         self.com = Combobox(self, values=self.save_names)
 
     def get_name(self):
+        global name_of_save
         if self.type == 0:
-            self.save_name = self.name_of_save.get()
+            name_of_save = self.save_name.get()
         else:
-            self.save_name = self.com.get()
+            name_of_save = self.com.get()
         self.destroy()
         self.quit()
 
