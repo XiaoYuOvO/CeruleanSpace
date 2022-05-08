@@ -2,6 +2,7 @@ from typing import Callable, TypeVar, Generic, List, Any
 
 from pygame import Vector2, Surface
 
+from cerulean_space.render.particle.fire_particle import FireParticle
 from cerulean_space.render.particle.particle import Particle
 from cerulean_space.render.particle.particle_parameter import ParticleParameter
 from cerulean_space.render.particle.plane_chunk_particle import PlaneChunkParticle
@@ -40,3 +41,4 @@ def load_particle_textures(texture_manager: TextureManager):
 
 ROCK_CHUNK = register_particle_type("rock_chunk", RockChunkParticle)
 PLANE_CHUNK = register_particle_type("plane_chunk", PlaneChunkParticle)
+FIRE = register_particle_type("fire", FireParticle)

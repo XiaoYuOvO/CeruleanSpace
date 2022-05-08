@@ -5,6 +5,8 @@ from pygame import Rect
 import cerulean_space
 from cerulean_space.constants import PLAYER_MAX_HEIGHT, PLAYER_MIN_HEIGHT, PLAYER_MIN_X, PLAYER_MAX_X
 from cerulean_space.entity.living_entity import LivingEntity
+from cerulean_space.render.particle.particle_parameter import ParticleParameter
+from cerulean_space.render.particle.particle_types import FIRE
 from cerulean_space.util.math.math_helper import MathHelper
 
 
@@ -31,6 +33,9 @@ class PlayerEntity(LivingEntity):
         if self.tick_exist % 30 == 0:
             self.forward_vec = self.min_speed + MathHelper.cutoff(self.forward_vec * 0.7, self.min_speed,
                                                                   self.min_speed)
+        # self.world.add_particle(FIRE,
+        #                         ParticleParameter(self.get_x(), self.get_y() - self.bounding_box.height / 2, self.velocity * -self.forward_vec, 10))
+
         if self.get_y() >= PLAYER_MAX_HEIGHT:
             self.world.game_win()
         self.set_pos((MathHelper.max(MathHelper.min(self.get_x(), PLAYER_MAX_X), PLAYER_MIN_X),
