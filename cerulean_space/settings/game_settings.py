@@ -13,3 +13,6 @@ class GameSettings:
         self.game_window_width = 500
         self.game_window_height = 500
         self.world_file = "../world.json"
+
+    def set_save_path(self, save_name):
+        self.world_file = "../{}.json".format(save_name)

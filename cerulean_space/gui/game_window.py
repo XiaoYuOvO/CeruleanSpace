@@ -4,8 +4,11 @@ import tkinter
 from tkinter.ttk import *
 from tkinter import *
 from cerulean_space.settings.game_settings import *
+from cerulean_space.game import *
 
+os.chdir("..")
 settings = GameSettings()
+name_of_save = "NewGame"
 
 
 def new_game():
@@ -25,9 +28,33 @@ def scan_save():
     return files
 
 
+def new_dialog():
+    global name_of_save, settings
+    d = Dialog(0)
+    d.draw()
+    d.mainloop()
+    name_of_save = d.save_name
+
+    settings.set_save_path(name_of_save)
+    CeruleanSpace(settings).start_game_loop()
+
+
+def continue_dialog():
+    global name_of_save
+    d = Dialog(1)
+    d.mainloop()
+    name_of_save = d.save_name
+
+
+def setting_dialog():
+    s = SettingWindows()
+    s.setting()
+    s.mainloop()
+
+
 class Dialog(Tk):
-    new_code = 0
-    continue_code = 1
+    # new_code = 0
+    # continue_code = 1
     save_name = "NewGame"
 
     def __init__(self, code, save_names=None):
@@ -48,6 +75,7 @@ class Dialog(Tk):
             self.save_name = self.name_of_save.get()
         else:
             self.save_name = self.com.get()
+        self.destroy()
         self.quit()
 
     def draw(self):
@@ -68,7 +96,7 @@ class Window(Tk):
         self.save_name = ''
         # todo 窗体的iron
 
-    def draw_mainmenu(self, call_backs):
+    def draw_mainmenu(self):
         saves = scan_save()
         frame_1 = Frame(self)  # 最顶上的窗格
         frame_1.pack(fill=tkinter.X, side=tkinter.TOP)
@@ -76,10 +104,9 @@ class Window(Tk):
 
         frame_2 = Frame(self)
         frame_2.pack(fill=tkinter.Y, side=tkinter.LEFT)
-        Button(frame_2, text="新建存档", font=("Calibri", 15), command=call_backs["NewGame"]).grid(row=0, column=0)
-        Button(frame_2, text="继续游戏", font=("Calibri", 15), command=call_backs["Continue"]).grid(row=1, column=0)
-        Button(frame_2, text="查看记录", font=("Calibri", 15), command=call_backs["CheckRecord"]).grid(row=2, column=0)
-        Button(frame_2, text="游戏设置", font=("Calibri", 15), command=call_backs["Setting"]).grid(row=3, column=0)
+        Button(frame_2, text="新建存档", font=("Calibri", 15), command=new_dialog).grid(row=0, column=0)
+        Button(frame_2, text="继续游戏", font=("Calibri", 15), command=continue_dialog).grid(row=1, column=0)
+        Button(frame_2, text="游戏设置", font=("Calibri", 15), command=setting_dialog).grid(row=3, column=0)
 
         # frame_3 = Frame(self)
         # frame_3.pack()
@@ -96,24 +123,7 @@ class Window(Tk):
 class SettingWindows(Tk):
     def __init__(self):
         super().__init__()
-        self.title("设置")
-        self.geometry("380x250")
-
-    def setting(self):
-        global settings
-
-        def _get_setting(forward_key, reward_key, left_key, right_key, save_key, fps_max, weight_max, height_max):
-            global settings
-            settings.key_forward = forward_key
-            settings.key_reward = reward_key
-            settings.key_left = left_key
-            settings.key_right = right_key
-            settings.key_save_world = save_key
-            settings.game_tick_fps = fps_max
-            settings.game_window_width = weight_max
-            settings.game_window_height = height_max
-
-        keys_list = {
+        self.keys_list = {
             "0": pygame.K_0,
             "1": pygame.K_1,
             "2": pygame.K_2,
@@ -268,6 +278,35 @@ class SettingWindows(Tk):
             "UNKNOWN": pygame.K_UNKNOWN,
             "UP": pygame.K_UP
         }  # 未来做成一个字典来储存对应的中文名称更好
+        self.height = None
+        self.height_value = None
+        self.weight = None
+        self.fps = None
+        self.fps_value = None
+        self.save = None
+        self.right = None
+        self.left = None
+        self.reward = None
+        self.weight_value = None
+        self.forward = None
+        self.title("设置")
+        self.geometry("380x250")
+
+    def _get_setting(self):
+        global settings
+        settings.key_forward = self.keys_list.get(self.forward.get())
+        settings.key_reward = self.keys_list.get(self.reward.get())
+        settings.key_left = self.keys_list.get(self.left.get())
+        settings.key_right = self.keys_list.get(self.right.get())
+        settings.key_save_world = self.keys_list.get(self.save.get())
+        settings.game_tick_fps = int(self.fps_value.get())
+        settings.game_window_width = int(self.weight.get())
+        settings.game_window_height = int(self.height.get())
+
+        self.destroy()
+        
+    def setting(self):
+        global settings
 
         Label(self, text="前进键").grid(row=0, column=0)
         Label(self, text="后退键").grid(row=1, column=0)
@@ -278,60 +317,46 @@ class SettingWindows(Tk):
         Label(self, text="窗口宽度").grid(row=6, column=0)
         Label(self, text="窗口长度").grid(row=7, column=0)
 
-        forward = Combobox(self, values=list(keys_list.keys()))
-        forward.current(list(keys_list.keys()).index("K_w"))
-        forward.grid(row=0, column=1)
+        self.forward = Combobox(self, values=list(self.keys_list.keys()))
+        self.forward.current(list(self.keys_list.keys()).index("w"))
+        self.forward.grid(row=0, column=1)
 
-        reward = Combobox(self, values=list(keys_list.keys()))
-        reward.current(list(keys_list.keys()).index("K_s"))
-        reward.grid(row=1, column=1)
+        self.reward = Combobox(self, values=list(self.keys_list.keys()))
+        self.reward.current(list(self.keys_list.keys()).index("s"))
+        self.reward.grid(row=1, column=1)
 
-        left = Combobox(self, values=list(keys_list.keys()))
-        left.current(list(keys_list.keys()).index("K_a"))
-        left.grid(row=2, column=1)
+        self.left = Combobox(self, values=list(self.keys_list.keys()))
+        self.left.current(list(self.keys_list.keys()).index("a"))
+        self.left.grid(row=2, column=1)
 
-        right = Combobox(self, values=list(keys_list.keys()))
-        right.current(list(keys_list.keys()).index("K_d"))
-        right.grid(row=3, column=1)
+        self.right = Combobox(self, values=list(self.keys_list.keys()))
+        self.right.current(list(self.keys_list.keys()).index("d"))
+        self.right.grid(row=3, column=1)
 
-        save = Combobox(self, values=list(keys_list.keys()))
-        save.current(list(keys_list.keys()).index("K_r"))
-        save.grid(row=4, column=1)
+        self.save = Combobox(self, values=list(self.keys_list.keys()))
+        self.save.current(list(self.keys_list.keys()).index("r"))
+        self.save.grid(row=4, column=1)
 
-        fps_value = StringVar()
-        fps_value.set("120")
-        fps = Entry(self, textvariable=fps_value)
-        fps.grid(row=5, column=1)
+        self.fps_value = StringVar(value="60")
+        self.fps = Entry(self, textvariable=self.fps_value)
+        self.fps.grid(row=5, column=1)
 
-        weight_value = StringVar()
-        weight_value.set("1920")
-        weight = Entry(self, textvariable=fps_value)
-        weight.grid(row=6, column=1)
+        self.weight_value = StringVar(value="1920")
+        self.weight = Entry(self, textvariable=self.weight_value)
+        self.weight.grid(row=6, column=1)
 
-        height_value = StringVar()
-        height_value.set("1080")
-        height = Entry(self, textvariable=fps_value)
-        height.grid(row=7, column=1)
+        self.height_value = StringVar(value="1080")
+        self.height = Entry(self, textvariable=self.height_value)
+        self.height.grid(row=7, column=1)
 
         Button(self, text="确定",
-               command=_get_setting(keys_list.get(forward.get()), keys_list.get(reward.get()),
-                                    keys_list.get(left.get()),
-                                    keys_list.get(right.get()), keys_list.get(save.get()), int(fps.get()),
-                                    int(weight.get()), int(height.get()))).grid(row=8, column=0)
+               command=self._get_setting).grid(row=8, column=0)
 
         return settings
 
 
 if __name__ == '__main__':
-    w = Dialog(1, save_names=scan_save())
+    w = Window()
 
-    def none():
-        pass
-    dic = dict()
-    dic["NewGame"] = none
-    dic["Continue"] = none
-    dic["CheckRecord"] = none
-    dic["Setting"] = none
-
-    w.draw()
+    w.draw_mainmenu()
     w.mainloop()
