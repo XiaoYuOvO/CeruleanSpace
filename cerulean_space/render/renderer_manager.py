@@ -8,6 +8,7 @@ from cerulean_space.render.entity_renders.entity_render_dispatcher import Entity
 from cerulean_space.render.game_over_screen import GameOverScreen
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.game_win_screen import GameWinScreen
+from cerulean_space.render.particle.particle_renderer import ParticleRenderer
 from cerulean_space.render.texture_manager import TextureManager
 from cerulean_space.render.ui_renderer import UIRenderer
 from cerulean_space.render.world_renderer import WorldRenderer
@@ -35,6 +36,7 @@ class RendererManager:
         self.add_renderer(BackgroundRenderer(world, self.textureManager))
         self.add_renderer(EntityRenderDispatcher(world, self.textureManager))
         self.add_renderer(UIRenderer(world, self.textureManager, player))
+        self.add_renderer(ParticleRenderer(world, self.textureManager))
 
     def switch_to_game_over_screen(self, world: World):
         self.worldRenderers.clear()
