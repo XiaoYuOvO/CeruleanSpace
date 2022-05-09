@@ -8,6 +8,7 @@ from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.render.particle.particle_parameter import ParticleParameter
 from cerulean_space.render.particle.particle_types import ROCK_CHUNK
+from cerulean_space.sounds.sound_events import SoundEvents
 
 
 class RockEntity(Entity):
@@ -34,6 +35,7 @@ class RockEntity(Entity):
                                                           self.velocity.rotate(10 * i + rand.randint(-10, 10)) * (
                                                               rand.random()),
                                                           40))
+            SoundEvents.ROCK_CRACK.play()
             self.remove()
 
     def set_size(self, size: float):

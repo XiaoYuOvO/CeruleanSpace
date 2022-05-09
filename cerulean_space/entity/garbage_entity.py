@@ -5,6 +5,7 @@ from pygame import Rect
 from cerulean_space.constants import PLAYER_MAX_X, PLAYER_MIN_X, PLAYER_COLLECT_MAX_HEIGHT, PLAYER_COLLECT_MIN_HEIGHT
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.player_entity import PlayerEntity
+from cerulean_space.sounds.sound_events import SoundEvents
 from cerulean_space.util.math.math_helper import MathHelper
 
 
@@ -34,6 +35,7 @@ class GarbageEntity(Entity):
             if player.can_collect(self.__amount):
                 player.collected_garbage += self.__amount
                 player.update_mass()
+                SoundEvents.DING.play()
                 self.remove()
 
     def can_despawn(self) -> bool:

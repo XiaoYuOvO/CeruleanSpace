@@ -5,6 +5,7 @@ from pygame import Rect
 from cerulean_space.constants import PLAYER_MAX_HEIGHT, PLAYER_MIN_HEIGHT, PLAYER_MIN_X, PLAYER_MAX_X, \
     PLAYER_COLLECT_MIN_HEIGHT, PLAYER_COLLECT_MAX_HEIGHT
 from cerulean_space.entity.living_entity import LivingEntity
+from cerulean_space.sounds.sound_events import SoundEvents
 from cerulean_space.util.math.math_helper import MathHelper
 
 
@@ -38,6 +39,10 @@ class PlayerEntity(LivingEntity):
 
     def get_max_garbage(self) -> int:
         return 300
+
+    def damage(self, damage: float):
+        super(PlayerEntity, self).damage(damage)
+        SoundEvents.METAL_HIT.play()
 
     def update_mass(self):
         self.mass = self.fuel * 0.7 + self.collected_garbage + self.base_mass
