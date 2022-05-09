@@ -38,10 +38,20 @@ def new_dialog():
     CeruleanSpace(settings).start_game_loop()
 
 
+def show_introduction():
+    show_d = Dialog(2)
+    show_d.draw()
+    show_d.mainloop()
+
+
 def continue_dialog():
     global name_of_save
-    d = Dialog(1)
+    d = Dialog(1, scan_save())
+    d.draw()
     d.mainloop()
+
+    settings.world_file = "../{}".format(name_of_save)
+    CeruleanSpace(settings).start_game_loop()
 
 
 def setting_dialog():
@@ -57,8 +67,8 @@ class Dialog(Tk):
     def __init__(self, code, save_names=None):
         super().__init__()
         self.type = code
-        self.title("新游戏" if self.type == 0 else "选择存档")
-        self.geometry("300x80")
+        self.title("新游戏" if self.type == 0 else "继续游戏" if self.type == 1 else "游戏介绍")
+        self.geometry("300x80" if self.type != 2 else "800x350")
         self.save_names = save_names
 
         self.save_name = StringVar()
@@ -69,8 +79,9 @@ class Dialog(Tk):
 
     def get_name(self):
         global name_of_save
+        print(self.entry.get())
         if self.type == 0:
-            name_of_save = self.save_name.get()
+            name_of_save = self.entry.get()
         else:
             name_of_save = self.com.get()
         self.destroy()
@@ -80,9 +91,32 @@ class Dialog(Tk):
         if self.type == 0:
             self.entry.pack()
             Button(self, text="新游戏", command=self.get_name, font=("Calibri", 15)).pack()
-        else:
+            print(self.entry.get())
+        elif self.type == 1:
             self.com.pack()
             Button(self, text="继续游戏", command=self.get_name, font=("Calibri", 15)).pack()
+        else:
+            t1 = "本游戏中，你将作为一名航天员，驾驶飞船从地面飞向太空，到太空中执行回收垃圾的任务。"
+            t2 = "在飞向太空的途中，你需要用A，D操作飞船的旋转角度，躲避途中的飞机和陨石"
+            t3 = "同时，你可以按下W来消耗右侧的推进燃料来提升飞行速度，或者按S来减速。"
+            t4 = "你的推进燃料越少，惯性就越小，转向和加速速度就越快。"
+            t5 = "你还需要注意风向对飞行的影响。"
+            t6 = "当你成功进入太空后，你就需要迅速地将周围的太空垃圾收集到飞船上并送往空间站。"
+            t7 = "需要注意的是，你一次收集的垃圾越多，飞得越慢。"
+            t8 = "太空中还会散布一些油罐，可以收集他们来补充你的燃料。但这也将使你的飞船重量变大，惯性变大。"
+            t9 = "你必须在有限时间内将不低于指定数量的垃圾收集到空间站中，否则任务将会失败。"
+            t10 = "那么，你能完成任务吗？"
+
+            Label(self, text=t1, font=("Calibri", 12)).pack()
+            Label(self, text=t2, font=("Calibri", 12)).pack()
+            Label(self, text=t3, font=("Calibri", 12)).pack()
+            Label(self, text=t4, font=("Calibri", 12)).pack()
+            Label(self, text=t5, font=("Calibri", 12)).pack()
+            Label(self, text=t6, font=("Calibri", 12)).pack()
+            Label(self, text=t7, font=("Calibri", 12)).pack()
+            Label(self, text=t8, font=("Calibri", 12)).pack()
+            Label(self, text=t9, font=("Calibri", 12)).pack()
+            Label(self, text=t10, font=("Calibri", 15)).pack()
 
 
 class Window(Tk):
@@ -104,18 +138,8 @@ class Window(Tk):
         frame_2.pack(fill=tkinter.Y, side=tkinter.LEFT)
         Button(frame_2, text="新建存档", font=("Calibri", 15), command=new_dialog).grid(row=0, column=0)
         Button(frame_2, text="继续游戏", font=("Calibri", 15), command=continue_dialog).grid(row=1, column=0)
+        Button(frame_2, text="游戏介绍", font=("Calibri", 15), command=show_introduction).grid(row=2, column=0)
         Button(frame_2, text="游戏设置", font=("Calibri", 15), command=setting_dialog).grid(row=3, column=0)
-
-        # frame_3 = Frame(self)
-        # frame_3.pack()
-        # value = IntVar()
-        # value.set(0)
-        # Radiobutton(frame_3, text="简单", variable=value, value=0).grid(row=0, column=0)
-        # Radiobutton(frame_3, text="普通", variable=value, value=1).grid(row=0, column=1)
-        # Radiobutton(frame_3, text="中等", variable=value, value=2).grid(row=1, column=0)
-        # Radiobutton(frame_3, text="困难", variable=value, value=3).grid(row=1, column=1)
-        # Radiobutton(frame_3, text="炼狱", variable=value, value=4).grid(row=2, column=0)
-        # Radiobutton(frame_3, text="疯狂", variable=value, value=5).grid(row=2, column=1)
 
 
 class SettingWindows(Tk):
@@ -358,3 +382,7 @@ if __name__ == '__main__':
 
     w.draw_mainmenu()
     w.mainloop()
+
+    # d = Dialog(2)
+    # d.draw()
+    # d.mainloop()
