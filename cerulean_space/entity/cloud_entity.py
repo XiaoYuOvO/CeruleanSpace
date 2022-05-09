@@ -10,3 +10,6 @@ class CloudEntity(Entity):
     @staticmethod
     def get_codec_name() -> str:
         return "cloud"
+
+    def no_collide(self) -> bool:
+        return True

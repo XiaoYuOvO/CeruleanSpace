@@ -14,3 +14,9 @@ class MathHelper:
         if a < threshold:
             return cut_to_val
         return a
+
+    @staticmethod
+    def abs(v):
+        if v < 0:
+            return -v
+        return v

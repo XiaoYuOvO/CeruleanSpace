@@ -37,6 +37,9 @@ class Entity(metaclass=abc.ABCMeta):
     def on_collided_with(self, other) -> NoReturn:
         pass
 
+    def no_collide(self) -> bool:
+        return False
+
     def remove(self) -> NoReturn:
         self.removed = True
 

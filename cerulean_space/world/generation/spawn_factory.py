@@ -4,6 +4,7 @@ from typing import Callable, Dict, Any
 from cerulean_space.constants import PLAYER_MAX_X, PLAYER_MIN_X
 from cerulean_space.entity.cloud_entity import CloudEntity
 from cerulean_space.entity.garbage_entity import GarbageEntity
+from cerulean_space.entity.oil_bucket_entity import OilBucketEntity
 from cerulean_space.entity.plane_entity import PlaneEntity, DIRECTION_RIGHT, DIRECTION_LEFT
 from cerulean_space.entity.rock_entity import RockEntity
 from cerulean_space.entity.space_station_entity import SpaceStationEntity
@@ -67,6 +68,11 @@ def on_space_station_spawn(world: Any, rand: Random, spawn_y):
     space_station.set_pos((PLAYER_MAX_X / 2 + rand.randint(-50, 50), spawn_y))
     world.add_entity(space_station)
 
+def on_oil_bucket_spawn(world: Any, rand: Random, spawn_y):
+    oil_bucket = OilBucketEntity(world)
+    oil_bucket.set_pos((PLAYER_MAX_X / 2 + rand.randint(-50, 50), spawn_y))
+    world.add_entity(oil_bucket)
+
 
 FACTORIES: Dict[str, SpawnFactory] = dict()
 
@@ -84,3 +90,4 @@ class SpawnFactories:
     CLOUD_SPAWN: SpawnFactory = register("cloud_spawn", on_cloud_spawn)
     SPACE_STATION_SPAWN: SpawnFactory = register("space_station_spawn", on_space_station_spawn)
     GARBAGE_SPAWN: SpawnFactory = register("garbage_spawn", on_garbage_spawn)
+    OIL_BUCKET_SPAWN: SpawnFactory = register("oil_bucket_spawn", on_oil_bucket_spawn)

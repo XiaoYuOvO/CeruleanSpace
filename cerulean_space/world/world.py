@@ -20,7 +20,6 @@ from cerulean_space.world.generation.spawn_factory import SpawnFactories, FACTOR
 
 class World:
     def __init__(self, game_instance):
-        # 实体列表,全部继承Entity,为防止循环引用,使用Any
         """
         :var self.rand :该世界的随机函数
         :var self.wind_force todo
@@ -31,14 +30,13 @@ class World:
         """
         self.rand: Random = Random()
         self.wind_force = 0.0
+        self.time_to_next_wind_force = 0
         self.player = PlayerEntity(self)
-        # 实体与坐标并无对应关系
+        # 实体列表,全部继承Entity
         self.entities: List[Entity] = list()
 
         self.weight = 100
         self.height = 100000
-        self.part_height = int(self.height / 10)  # 基块大小
-        self.part_amount = 3  # 每个分块中实体生成数量基数
         self.game = game_instance
         self.entity_spawner = EntitySpawner(self)
         self.particle_manager = ParticleManager()
@@ -61,6 +59,8 @@ class World:
     def tick(self):
         for e in self.entities:
             e.tick()
+            if e.tick_exist % 5 == 0:
+                e.set_pos((e.get_x() + self.wind_force, e.get_y()))
             if e.removed:
                 self.entities.remove(e)
         self.entity_spawner.tick_spawn(self.rand, self.player)
@@ -69,7 +69,13 @@ class World:
             t.display_time -= 1
             if t.display_time <= 0:
                 self.hover_texts.remove(t)
-        if self.is_collect_mode():
+        if not self.is_collect_mode():
+            if self.time_to_next_wind_force <= 0:
+                self.wind_force = self.rand.randrange(-5, 5)
+                self.time_to_next_wind_force = self.rand.randrange(300, 1800)
+            else:
+                self.time_to_next_wind_force -= 1
+        if self.is_collect_mode() and self.collect_time >= 0:
             self.collect_time -= 1
             if self.collect_time <= 0:
                 self.finish_collect()
@@ -80,7 +86,7 @@ class World:
     def get_collided_entity(self, entity) -> List:
         result = list()
         for e in self.entities:
-            if e is not entity and entity.bounding_box.colliderect(e.bounding_box):
+            if e is not entity and not e.no_collide() and entity.bounding_box.colliderect(e.bounding_box):
                 result.append(e)
         return result
 
@@ -99,11 +105,16 @@ class World:
 
     def switch_to_collect_mode(self):
         self.player.switch_to_collect_mode()
+        self.add_hover_text(HoverText("你已成功飞入太空！",
+                                      self.game.game_renderer.get_rendering_width() / 2,
+                                      self.game.game_renderer.get_rendering_height() / 3, 300, 50))
         self.game.unlock_camera()
+        self.wind_force = 0
 
     def start_collect_mode(self):
         self.player.start_collect_mode()
         self.game.lock_camera()
+        self.wind_force = 0
         self.game_mode = GameModes.COLLECT
         self.add_hover_text(HoverText("在有限的时间内收集足够的太空垃圾！",
                                       self.game.game_renderer.get_rendering_width() / 2,
@@ -131,6 +142,8 @@ class World:
         self.game_mode = GameModes[(data.get("game_mode"))]
         self.wind_force = data.get("wind_force")
         self.collect_time = data.get("collect_time")
+        self.garbage_collected = data.get("garbage_collected")
+        self.time_to_next_wind_force = data.get("time_to_next_wind_force")
         self.init_game_mode()
 
     def write_world(self) -> dict:
@@ -152,6 +165,8 @@ class World:
         result["wind_force"] = self.wind_force
         result["game_mode"] = self.game_mode.name
         result["collect_time"] = self.collect_time
+        result["garbage_collected"] = self.garbage_collected
+        result['time_to_next_wind_force'] = self.time_to_next_wind_force
         return result
 
     def add_spawn_entry(self, entry):

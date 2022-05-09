@@ -2,6 +2,7 @@ from typing import TypeVar, Callable, Dict, Any
 
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.garbage_entity import GarbageEntity
+from cerulean_space.entity.oil_bucket_entity import OilBucketEntity
 from cerulean_space.entity.plane_entity import PlaneEntity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
@@ -33,3 +34,4 @@ register_entity_type(PlaneEntity)
 register_entity_type(CloudEntity)
 register_entity_type(GarbageEntity)
 register_entity_type(SpaceStationEntity)
+register_entity_type(OilBucketEntity)
