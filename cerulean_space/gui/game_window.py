@@ -129,7 +129,6 @@ class Window(Tk):
         # todo 窗体的iron
 
     def draw_mainmenu(self):
-        saves = scan_save()
         frame_1 = Frame(self)  # 最顶上的窗格
         frame_1.pack(fill=tkinter.X, side=tkinter.TOP)
         Label(frame_1, text="蔚蓝浩空", font=("Calibri", 25)).pack()
@@ -300,11 +299,6 @@ class SettingWindows(Tk):
             "UNKNOWN": pygame.K_UNKNOWN,
             "UP": pygame.K_UP
         }  # 未来做成一个字典来储存对应的中文名称更好
-        self.height = None
-        self.height_value = None
-        self.weight = None
-        self.fps = None
-        self.fps_value = None
         self.save = None
         self.right = None
         self.left = None
@@ -321,9 +315,6 @@ class SettingWindows(Tk):
         settings.key_left = self.keys_list.get(self.left.get())
         settings.key_right = self.keys_list.get(self.right.get())
         settings.key_save_world = self.keys_list.get(self.save.get())
-        settings.game_tick_fps = int(self.fps_value.get())
-        settings.game_window_width = int(self.weight.get())
-        settings.game_window_height = int(self.height.get())
 
         self.destroy()
         
@@ -358,18 +349,6 @@ class SettingWindows(Tk):
         self.save = Combobox(self, values=list(self.keys_list.keys()))
         self.save.current(list(self.keys_list.keys()).index("r"))
         self.save.grid(row=4, column=1)
-
-        self.fps_value = StringVar(value="60")
-        self.fps = Entry(self, textvariable=self.fps_value)
-        self.fps.grid(row=5, column=1)
-
-        self.weight_value = StringVar(value="1920")
-        self.weight = Entry(self, textvariable=self.weight_value)
-        self.weight.grid(row=6, column=1)
-
-        self.height_value = StringVar(value="1080")
-        self.height = Entry(self, textvariable=self.height_value)
-        self.height.grid(row=7, column=1)
 
         Button(self, text="确定",
                command=self._get_setting).grid(row=8, column=0)
