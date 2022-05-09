@@ -6,7 +6,6 @@ from tkinter import *
 from cerulean_space.settings.game_settings import *
 from cerulean_space.game import *
 
-os.chdir("..")
 settings = GameSettings()
 name_of_save = "NewGame"
 
@@ -365,6 +364,3 @@ def run():
     w.draw_mainmenu()
     w.mainloop()
     w.quit()
-
-
-run()
