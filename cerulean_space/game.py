@@ -4,7 +4,7 @@ from random import Random
 
 import pygame.time
 
-from cerulean_space.constants import PLAYER_MAX_X
+from cerulean_space.constants import PLAYER_MAX_X, GAME_TICK_RATE
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.input.keyboard import Keyboard
 from cerulean_space.io.world_storage import WorldStorage
@@ -52,7 +52,7 @@ class CeruleanSpace:
             self.renderer_manager.render()
             self.handle_game_events()
             lock.release()
-            clock.tick(self.settings.game_tick_rate)
+            clock.tick(self.settings.game_tick_fps)
             pygame.display.set_caption("蔚蓝浩空 " + clock.get_fps().__str__())
         pygame.quit()
 
@@ -65,7 +65,7 @@ class CeruleanSpace:
                 self.keyboard.tick()
                 self.world.tick()
                 lock.release()
-                clock.tick(self.settings.game_tick_rate)
+                clock.tick(GAME_TICK_RATE)
 
         threading.Thread(target=tick_world_tick, args=()).start()
 
@@ -104,6 +104,9 @@ class CeruleanSpace:
         self.renderer_manager.switch_to_game_win_screen(self.world)
 
     def game_over(self):
+        self.renderer_manager.switch_to_game_over_screen(self.world)
+
+    def collect_failed(self):
         self.renderer_manager.switch_to_game_over_screen(self.world)
 
     def unlock_camera(self):

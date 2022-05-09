@@ -8,7 +8,6 @@ class GameSettings:
         self.key_left = pygame.K_a
         self.key_right = pygame.K_d
         self.key_save_world = pygame.K_r
-        self.game_tick_rate = 60
         self.game_tick_fps = 120
         self.game_window_width = 500
         self.game_window_height = 500

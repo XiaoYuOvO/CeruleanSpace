@@ -9,6 +9,7 @@ from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.ui.game_win_screen import GameWinScreen
 from cerulean_space.render.particle.particle_renderer import ParticleRenderer
 from cerulean_space.render.texture_manager import TextureManager
+from cerulean_space.render.ui.mission_failed_screen import MissionFailedScreen
 from cerulean_space.render.ui.ui_renderer import UIRenderer
 from cerulean_space.render.world_renderer import WorldRenderer
 from cerulean_space.world.world import World
@@ -40,6 +41,11 @@ class RendererManager:
         self.worldRenderers.clear()
         self.add_renderer(BackgroundRenderer(world, self.textureManager))
         self.add_renderer(GameOverScreen(world, self.textureManager))
+
+    def switch_to_collect_failed_screen(self, world: World):
+        self.worldRenderers.clear()
+        self.add_renderer(BackgroundRenderer(world, self.textureManager))
+        self.add_renderer(MissionFailedScreen(world, self.textureManager))
 
     def switch_to_game_win_screen(self, world: World):
         self.worldRenderers.clear()
