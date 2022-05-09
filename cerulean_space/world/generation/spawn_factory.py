@@ -3,8 +3,10 @@ from typing import Callable, Dict, Any
 
 from cerulean_space.constants import PLAYER_MAX_X, PLAYER_MIN_X
 from cerulean_space.entity.cloud_entity import CloudEntity
+from cerulean_space.entity.garbage_entity import GarbageEntity
 from cerulean_space.entity.plane_entity import PlaneEntity, DIRECTION_RIGHT, DIRECTION_LEFT
 from cerulean_space.entity.rock_entity import RockEntity
+from cerulean_space.entity.space_station_entity import SpaceStationEntity
 
 
 class SpawnFactory:
@@ -49,6 +51,23 @@ def on_cloud_spawn(world: Any, rand: Random, spawn_y):
     world.add_entity(cloud)
 
 
+def on_garbage_spawn(world: Any, rand: Random, spawn_y):
+    garbage = GarbageEntity(world)
+    garbage.set_pos((rand.randint(PLAYER_MIN_X, PLAYER_MAX_X), spawn_y))
+    garbage.set_amount(round(10 + rand.random() * 15))
+    if rand.randint(0, 1) == 0:
+        garbage.velocity.x = rand.random() * rand.randint(-3, 3)
+    if rand.randint(0, 1) == 0:
+        garbage.velocity.y = rand.random() * rand.randint(-3, 3)
+    world.add_entity(garbage)
+
+
+def on_space_station_spawn(world: Any, rand: Random, spawn_y):
+    space_station = SpaceStationEntity(world)
+    space_station.set_pos((PLAYER_MAX_X / 2 + rand.randint(-50, 50), spawn_y))
+    world.add_entity(space_station)
+
+
 FACTORIES: Dict[str, SpawnFactory] = dict()
 
 
@@ -63,3 +82,5 @@ class SpawnFactories:
     ROCK_SPAWN: SpawnFactory = register("rock_spawn", on_rock_spawn)
     ROCK_SPAWN_SPACE: SpawnFactory = register("rock_spawn_space", on_rock_in_space_spawn)
     CLOUD_SPAWN: SpawnFactory = register("cloud_spawn", on_cloud_spawn)
+    SPACE_STATION_SPAWN: SpawnFactory = register("space_station_spawn", on_space_station_spawn)
+    GARBAGE_SPAWN: SpawnFactory = register("garbage_spawn", on_garbage_spawn)
