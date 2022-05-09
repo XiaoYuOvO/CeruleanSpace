@@ -8,6 +8,7 @@ from cerulean_space.constants import PLAYER_MAX_X
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.input.keyboard import Keyboard
 from cerulean_space.io.world_storage import WorldStorage
+from cerulean_space.render.camera_renderer import CameraRenderer
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.renderer_manager import RendererManager
 from cerulean_space.settings.game_settings import GameSettings
@@ -38,6 +39,8 @@ class CeruleanSpace:
         # self.world.add_entity(testrock)
         self.player = self.world.player
         self.renderer_manager.init_all_renders(self.world, self.player)
+        self.camera_renderer = CameraRenderer(self.world, self.renderer_manager.textureManager, self.player)
+        self.renderer_manager.add_renderer(self.camera_renderer)
         self.register_key_callbacks(settings)
 
     def start_game_loop(self):
@@ -61,10 +64,6 @@ class CeruleanSpace:
                 lock.acquire()
                 self.keyboard.tick()
                 self.world.tick()
-                self.game_renderer.set_draw_offset(
-                    PLAYER_MAX_X,
-                    self.player.get_y() + (
-                        self.game_renderer.get_rendering_height()) / 4 * 3)
                 lock.release()
                 clock.tick(self.settings.game_tick_rate)
 
@@ -106,3 +105,10 @@ class CeruleanSpace:
 
     def game_over(self):
         self.renderer_manager.switch_to_game_over_screen(self.world)
+
+    def unlock_camera(self):
+        self.camera_renderer.unlock()
+
+    def lock_camera(self):
+        self.camera_renderer.lock()
+

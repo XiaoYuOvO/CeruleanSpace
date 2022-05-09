@@ -1,5 +1,6 @@
 from random import Random
 
+from cerulean_space.constants import PLAYER_COLLECT_MAX_HEIGHT, PLAYER_COLLECT_MIN_HEIGHT
 from cerulean_space.world.generation.spawn_entry import SpawnEntry
 from cerulean_space.world.generation.spawn_factory import SpawnFactory, SpawnFactories
 from cerulean_space.world.world import World
@@ -31,12 +32,16 @@ class WorldGenerator:
         WorldGenerator.generate_in_range(world, count, rand, range(1000, 30000), SpawnFactories.CLOUD_SPAWN)
 
     @staticmethod
+    def generate_garbage(world: World, count: int,rand: Random):
+        WorldGenerator.generate_in_range(world,count,rand,range(PLAYER_COLLECT_MIN_HEIGHT,PLAYER_COLLECT_MAX_HEIGHT),SpawnFactories.GARBAGE_SPAWN)
+    @staticmethod
     def generate_world(rand: Random, game) -> World:
         world = World(game)
         WorldGenerator.generate_planes_in_low_range(world, 20, rand)
         WorldGenerator.generate_rocks_in_middle_range(world, 30, rand)
         WorldGenerator.generate_clouds(world, 100, rand)
         WorldGenerator.generate_rocks_in_space(world, 100, rand)
+        WorldGenerator.generate_garbage(world, 50, rand)
         # world.add_entity(PlayerEntity(world))
         return world
 

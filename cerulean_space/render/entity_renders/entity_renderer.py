@@ -23,7 +23,7 @@ class EntityRenderer(Generic[T], metaclass=abc.ABCMeta):
         game_renderer.draw_surface_with_angle(self.preprocess_texture(entity, self.texture), entity.get_rendering_x(),
                                               entity.get_rendering_y(),
                                               -entity.rotation)
-        line_color = Color(0, 0, 0)
+        line_color = Color(255, 255, 255)
         render_bottom_left = (entity.bounding_box.bottomleft[0], -entity.bounding_box.bottomleft[1])
         render_bottom_right = (entity.bounding_box.bottomright[0], -entity.bounding_box.bottomright[1])
         render_top_left = (entity.bounding_box.topleft[0], -entity.bounding_box.topleft[1])
