@@ -12,6 +12,7 @@ from cerulean_space.render.camera_renderer import CameraRenderer
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.renderer_manager import RendererManager
 from cerulean_space.settings.game_settings import GameSettings
+from cerulean_space.sounds.sound_events import SoundEvents
 from cerulean_space.world.generation.world_generator import WorldGenerator
 
 lock = threading.Lock()
@@ -42,6 +43,7 @@ class CeruleanSpace:
         self.camera_renderer = CameraRenderer(self.world, self.renderer_manager.textureManager, self.player)
         self.renderer_manager.add_renderer(self.camera_renderer)
         self.register_key_callbacks(settings)
+        SoundEvents.play_bgm()
 
     def start_game_loop(self):
         self.running = True

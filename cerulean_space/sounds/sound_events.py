@@ -1,9 +1,7 @@
 import pygame.mixer
 
 pygame.mixer.init()
-SOUND_DIR = "./sounds/"
-bgm = pygame.mixer.music.load(SOUND_DIR + "bgm.mp3")
-pygame.mixer.music.play(-1)
+SOUND_DIR = "./cerulean_space/sounds/"
 
 
 class SoundEvent:
@@ -18,3 +16,8 @@ class SoundEvents:
     ROCK_CRACK: SoundEvent = SoundEvent("rock_crack.wav")
     METAL_HIT: SoundEvent = SoundEvent("metal_hit.wav")
     DING: SoundEvent = SoundEvent("ding.ogg")
+
+    @staticmethod
+    def play_bgm():
+        pygame.mixer.music.load("./sounds/" + "bgm.mp3")
+        pygame.mixer.music.play(-1)
