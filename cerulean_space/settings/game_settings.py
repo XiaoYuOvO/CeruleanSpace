@@ -9,8 +9,8 @@ class GameSettings:
         self.key_right = pygame.K_d
         self.key_save_world = pygame.K_r
         self.game_tick_fps = 120
-        self.game_window_width = 500
-        self.game_window_height = 500
+        self.game_window_width = 1000
+        self.game_window_height = 680
         self.world_file = "../world.json"
 
     def set_save_path(self, save_name):

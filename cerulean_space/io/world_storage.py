@@ -5,7 +5,6 @@ from typing import NoReturn
 from cerulean_space.world.world import World
 
 
-
 class WorldStorage:
     @staticmethod
     def read_world_from_file(filename: str, game) -> World:
