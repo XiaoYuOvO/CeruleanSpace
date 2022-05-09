@@ -34,6 +34,9 @@ def new_dialog():
     d.draw()
     d.mainloop()
 
+    if not d.is_finished:
+        return
+
     settings.set_save_path(name_of_save)
     CeruleanSpace(settings).start_game_loop()
 
@@ -49,6 +52,9 @@ def continue_dialog():
     d = Dialog(1, scan_save())
     d.draw()
     d.mainloop()
+
+    if not d.is_finished:
+        return
 
     settings.world_file = "../{}".format(name_of_save)
     CeruleanSpace(settings).start_game_loop()
@@ -77,6 +83,8 @@ class Dialog(Tk):
 
         self.com = Combobox(self, values=self.save_names)
 
+        self.is_finished = False
+
     def get_name(self):
         global name_of_save
         print(self.entry.get())
@@ -84,6 +92,7 @@ class Dialog(Tk):
             name_of_save = self.entry.get()
         else:
             name_of_save = self.com.get()
+        self.is_finished = True
         self.destroy()
         self.quit()
 
@@ -326,9 +335,6 @@ class SettingWindows(Tk):
         Label(self, text="向左键").grid(row=2, column=0)
         Label(self, text="向右键").grid(row=3, column=0)
         Label(self, text="存档键").grid(row=4, column=0)
-        Label(self, text="最高帧数").grid(row=5, column=0)
-        Label(self, text="窗口宽度").grid(row=6, column=0)
-        Label(self, text="窗口长度").grid(row=7, column=0)
 
         self.forward = Combobox(self, values=list(self.keys_list.keys()))
         self.forward.current(list(self.keys_list.keys()).index("w"))
@@ -361,6 +367,7 @@ if __name__ == '__main__':
 
     w.draw_mainmenu()
     w.mainloop()
+    w.quit()
 
     # d = Dialog(2)
     # d.draw()
