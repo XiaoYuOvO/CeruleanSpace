@@ -107,7 +107,7 @@ class CeruleanSpace:
         self.renderer_manager.switch_to_game_over_screen(self.world)
 
     def collect_failed(self):
-        self.renderer_manager.switch_to_game_over_screen(self.world)
+        self.renderer_manager.switch_to_collect_failed_screen(self.world)
 
     def unlock_camera(self):
         self.camera_renderer.unlock()

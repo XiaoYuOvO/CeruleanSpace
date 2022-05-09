@@ -42,20 +42,20 @@ class PlaneEntity(LivingEntity):
                 left_to_right = True
                 self.world.add_particle(PLANE_CHUNK,
                                         PlaneParticleParameter(self.get_x(), self.get_y(),
-                                                               self.velocity * 0.8,
+                                                               self.velocity.rotate(45) * 0.8,
                                                                40, False, left_to_right))
                 self.world.add_particle(PLANE_CHUNK,
                                         PlaneParticleParameter(self.get_x() - self.bounding_box.width / 2, self.get_y(),
-                                                               self.velocity * 1.1,
+                                                               self.velocity.rotate(45) * 1.1,
                                                                40, True, left_to_right))
             else:
                 self.world.add_particle(PLANE_CHUNK,
                                         PlaneParticleParameter(self.get_x(), self.get_y(),
-                                                               self.velocity * 1.1,
+                                                               self.velocity.rotate(-45) * 1.1,
                                                                40, False, left_to_right))
                 self.world.add_particle(PLANE_CHUNK,
                                         PlaneParticleParameter(self.get_x() + self.bounding_box.width / 2, self.get_y(),
-                                                               self.velocity * 0.8,
+                                                               self.velocity.rotate(-45) * 0.8,
                                                                40, True, left_to_right))
 
             self.remove()

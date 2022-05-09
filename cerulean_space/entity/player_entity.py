@@ -6,7 +6,6 @@ from cerulean_space.constants import PLAYER_MAX_HEIGHT, PLAYER_MIN_HEIGHT, PLAYE
     PLAYER_COLLECT_MIN_HEIGHT, PLAYER_COLLECT_MAX_HEIGHT
 from cerulean_space.entity.living_entity import LivingEntity
 from cerulean_space.util.math.math_helper import MathHelper
-from cerulean_space.world.game_mode import GameModes
 
 
 class PlayerEntity(LivingEntity):
@@ -27,10 +26,11 @@ class PlayerEntity(LivingEntity):
         self.lock_rotation = True
         self.max_rotation = 30
         self.rotation_speed = 3
-        self.max_rotation_speed = 3
+        self.max_rotation_speed = 4
         self.max_push_strength = 2.0
         self.collected_garbage = 0
         self.base_mass = 60
+        self.has_switched_to_collect = False
         self.update_mass()
 
     def get_max_fuel(self) -> int:
@@ -41,6 +41,7 @@ class PlayerEntity(LivingEntity):
 
     def update_mass(self):
         self.mass = self.fuel * 0.7 + self.collected_garbage + self.base_mass
+        self.min_speed = 2.0 / MathHelper.max(self.mass / 100, 1)
         self.rotation_speed = self.max_rotation_speed / (self.mass / 100)
         self.push_strength = self.max_push_strength / (self.mass / 125)
 
@@ -52,14 +53,15 @@ class PlayerEntity(LivingEntity):
 
     def living_tick(self):
         super().living_tick()
-        if self.tick_exist % 30 == 0:
+        if self.tick_exist % 30 == 0 and not self.world.is_collect_mode():
             self.forward_vec = self.min_speed + MathHelper.cutoff(self.forward_vec * 0.7, self.min_speed,
                                                                   self.min_speed)
-        if self.world.game_mode is not GameModes.COLLECT:
+        if not self.world.is_collect_mode():
             if self.get_y() >= PLAYER_COLLECT_MIN_HEIGHT:
                 self.world.start_collect_mode()
-            elif self.get_y() >= PLAYER_MAX_HEIGHT:
+            elif self.get_y() >= PLAYER_MAX_HEIGHT and not self.has_switched_to_collect:
                 self.world.switch_to_collect_mode()
+                self.has_switched_to_collect = True
 
         self.set_pos((MathHelper.max(MathHelper.min(self.get_x(), PLAYER_MAX_X), PLAYER_MIN_X),
                       MathHelper.max(MathHelper.min(self.max_y, self.get_y()), self.min_y)))

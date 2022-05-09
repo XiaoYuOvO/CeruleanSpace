@@ -23,21 +23,21 @@ class EntityRenderer(Generic[T], metaclass=abc.ABCMeta):
         game_renderer.draw_surface_with_angle(self.preprocess_texture(entity, self.texture), entity.get_rendering_x(),
                                               entity.get_rendering_y(),
                                               -entity.rotation)
-        line_color = Color(255, 255, 255)
-        render_bottom_left = (entity.bounding_box.bottomleft[0], -entity.bounding_box.bottomleft[1])
-        render_bottom_right = (entity.bounding_box.bottomright[0], -entity.bounding_box.bottomright[1])
-        render_top_left = (entity.bounding_box.topleft[0], -entity.bounding_box.topleft[1])
-        render_top_right = (entity.bounding_box.topright[0], -entity.bounding_box.topright[1])
-        game_renderer.draw_line_by_point(render_bottom_left,
-                                         render_bottom_right, 2,
-                                         line_color)
-        game_renderer.draw_line_by_point(render_top_left, render_top_right, 2,
-                                         line_color)
-        game_renderer.draw_line_by_point(render_bottom_left, render_top_left, 2,
-                                         line_color)
-        game_renderer.draw_line_by_point(render_bottom_right, render_top_right,
-                                         2,
-                                         line_color)
+        # line_color = Color(255, 255, 255)
+        # render_bottom_left = (entity.bounding_box.bottomleft[0], -entity.bounding_box.bottomleft[1])
+        # render_bottom_right = (entity.bounding_box.bottomright[0], -entity.bounding_box.bottomright[1])
+        # render_top_left = (entity.bounding_box.topleft[0], -entity.bounding_box.topleft[1])
+        # render_top_right = (entity.bounding_box.topright[0], -entity.bounding_box.topright[1])
+        # game_renderer.draw_line_by_point(render_bottom_left,
+        #                                  render_bottom_right, 2,
+        #                                  line_color)
+        # game_renderer.draw_line_by_point(render_top_left, render_top_right, 2,
+        #                                  line_color)
+        # game_renderer.draw_line_by_point(render_bottom_left, render_top_left, 2,
+        #                                  line_color)
+        # game_renderer.draw_line_by_point(render_bottom_right, render_top_right,
+        #                                  2,
+        #                                  line_color)
 
     @abc.abstractmethod
     def get_texture(self) -> Identifier:

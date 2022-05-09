@@ -45,6 +45,12 @@ class WorldGenerator:
                                          SpawnFactories.SPACE_STATION_SPAWN)
 
     @staticmethod
+    def generate_oil_bucket(world: World, count: int, rand: Random):
+        WorldGenerator.generate_in_range(world, count, rand,
+                                         range(PLAYER_COLLECT_MIN_HEIGHT, PLAYER_COLLECT_MAX_HEIGHT),
+                                         SpawnFactories.OIL_BUCKET_SPAWN)
+
+    @staticmethod
     def generate_world(rand: Random, game) -> World:
         world = World(game)
         WorldGenerator.generate_planes_in_low_range(world, 20, rand)
@@ -53,6 +59,7 @@ class WorldGenerator:
         WorldGenerator.generate_rocks_in_space(world, 100, rand)
         WorldGenerator.generate_garbage(world, 50, rand)
         WorldGenerator.generate_space_station(world, 1, rand)
+        WorldGenerator.generate_oil_bucket(world,10,rand)
         # world.add_entity(PlayerEntity(world))
         return world
 

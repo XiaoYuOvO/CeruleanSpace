@@ -33,5 +33,6 @@ class PlaneChunkParticle(Particle):
             src = pygame.transform.chop(src, pygame.Rect(src.get_width() / 2, 0, src.get_width(), 0))
         scale = 255 * self.lifetime / self.max_lifetime
         src.set_alpha(scale)
+        src = pygame.transform.rotate(src, 90)
         src = pygame.transform.flip(src, self.left_to_right, False)
         return src
