@@ -67,9 +67,6 @@ def setting_dialog():
 
 
 class Dialog(Tk):
-    # new_code = 0
-    # continue_code = 1
-
     def __init__(self, code, save_names=None):
         super().__init__()
         self.type = code
@@ -326,7 +323,7 @@ class SettingWindows(Tk):
         settings.key_save_world = self.keys_list.get(self.save.get())
 
         self.destroy()
-        
+
     def setting(self):
         global settings
 
@@ -362,13 +359,12 @@ class SettingWindows(Tk):
         return settings
 
 
-if __name__ == '__main__':
+def run():
     w = Window()
 
     w.draw_mainmenu()
     w.mainloop()
     w.quit()
 
-    # d = Dialog(2)
-    # d.draw()
-    # d.mainloop()
+
+run()
