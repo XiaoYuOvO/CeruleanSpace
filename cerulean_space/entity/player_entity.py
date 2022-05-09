@@ -35,10 +35,16 @@ class PlayerEntity(LivingEntity):
     def get_max_fuel(self) -> int:
         return 250
 
+    def get_max_garbage(self) -> int:
+        return 300
+
     def update_mass(self):
-        self.mass = self.fuel * 0.7 + self.collected_garbage
+        self.mass = self.fuel * 0.7 + self.collected_garbage + 1
         self.rotation_speed = self.max_rotation_speed / (self.mass / 100)
         self.push_strength = self.max_push_strength / (self.mass / 125)
+
+    def can_collect(self,amount: int) -> bool:
+        return self.get_max_garbage() - self.collected_garbage >= amount
 
     def can_despawn(self) -> bool:
         return False
@@ -106,9 +112,11 @@ class PlayerEntity(LivingEntity):
         data = super(PlayerEntity, self).write_to_json()
         data["push_strength"] = self.push_strength
         data["fuel"] = self.fuel
+        data["collected_garbage"] = self.collected_garbage
         return data
 
     def read_from_json(self, data: dict):
         super(PlayerEntity, self).read_from_json(data)
         self.push_strength = data["push_strength"]
         self.fuel = data["fuel"]
+        self.collected_garbage = data["collected_garbage"]

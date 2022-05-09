@@ -48,13 +48,22 @@ class GameRenderer:
         self.draw_surface_at(text, x, y, pos_method)
 
     # 在屏幕上绘制字符串,字符串图像的左上角为(x,y)
-    def draw_string_at(self, content: str, x: int, y: int, size: float = 10, color: pygame.Color = (255, 255, 255),
+    def draw_string_at_left(self, content: str, x: int, y: int, size: float = 10, color: pygame.Color = (255, 255, 255),
+                            pos_method: PositionMethod = RELATIVE,
+                            rotation: int = 0,
+                            style: int = STYLE_DEFAULT):
+        text_surface = self.font_renderer.surface_from_font(content, size, rotation, style, color)
+        text_bounds: Rect = text_surface.get_rect()
+        self.draw_surface_at(text_surface, round(x + text_bounds.width / 2), round(y + text_bounds.height / 2),
+                             pos_method)
+
+    def draw_string_at_right(self, content: str, x: int, y: int, size: float = 10, color: pygame.Color = (255, 255, 255),
                        pos_method: PositionMethod = RELATIVE,
                        rotation: int = 0,
                        style: int = STYLE_DEFAULT):
         text_surface = self.font_renderer.surface_from_font(content, size, rotation, style, color)
         text_bounds: Rect = text_surface.get_rect()
-        self.draw_surface_at(text_surface, round(x + text_bounds.width / 2), round(y + text_bounds.height / 2),
+        self.draw_surface_at(text_surface, round(x - text_bounds.width / 2), round(y - text_bounds.height / 2),
                              pos_method)
 
     def draw_surface_at(self, surface: Surface, x, y,

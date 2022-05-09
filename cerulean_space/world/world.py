@@ -69,7 +69,7 @@ class World:
             t.display_time -= 1
             if t.display_time <= 0:
                 self.hover_texts.remove(t)
-        if self.game_mode is GameModes.COLLECT:
+        if self.is_collect_mode():
             self.collect_time -= 1
             if self.collect_time <= 0:
                 self.finish_collect()
@@ -90,10 +90,12 @@ class World:
         else:
             self.game_win()
 
-    def update_game_mode(self):
-        if self.game is GameModes.COLLECT:
-            self.switch_to_collect_mode()
-            self.start_collect_mode()
+    def is_collect_mode(self) -> bool:
+        return self.game_mode is GameModes.COLLECT
+
+    def init_game_mode(self):
+        if self.is_collect_mode():
+            self.start_with_collect_mode()
 
     def switch_to_collect_mode(self):
         self.player.switch_to_collect_mode()
@@ -102,9 +104,17 @@ class World:
     def start_collect_mode(self):
         self.player.start_collect_mode()
         self.game.lock_camera()
+        self.game_mode = GameModes.COLLECT
         self.add_hover_text(HoverText("在有限的时间内收集足够的太空垃圾！",
                                       self.game.game_renderer.get_rendering_width() / 2,
-                                      self.game.game_renderer.get_rendering_height() / 3, 300, 90))
+                                      self.game.game_renderer.get_rendering_height() / 3, 300, 50))
+
+    def start_with_collect_mode(self):
+        self.add_hover_text(HoverText("在有限的时间内收集足够的太空垃圾！",
+                                      self.game.game_renderer.get_rendering_width() / 2,
+                                      self.game.game_renderer.get_rendering_height() / 3, 300, 50))
+        self.player.switch_to_collect_mode()
+        self.player.start_collect_mode()
 
     def read_world(self, data: dict) -> NoReturn:
         for entity_data in data.get("entities"):  # entities: List[Dict[str,? extends Entity]]
@@ -121,7 +131,7 @@ class World:
         self.game_mode = GameModes[(data.get("game_mode"))]
         self.wind_force = data.get("wind_force")
         self.collect_time = data.get("collect_time")
-        self.update_game_mode()
+        self.init_game_mode()
 
     def write_world(self) -> dict:
         result = dict()
