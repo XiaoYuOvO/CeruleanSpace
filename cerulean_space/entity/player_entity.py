@@ -30,6 +30,7 @@ class PlayerEntity(LivingEntity):
         self.max_rotation_speed = 3
         self.max_push_strength = 2.0
         self.collected_garbage = 0
+        self.base_mass = 60
         self.update_mass()
 
     def get_max_fuel(self) -> int:
@@ -39,7 +40,7 @@ class PlayerEntity(LivingEntity):
         return 300
 
     def update_mass(self):
-        self.mass = self.fuel * 0.7 + self.collected_garbage + 1
+        self.mass = self.fuel * 0.7 + self.collected_garbage + self.base_mass
         self.rotation_speed = self.max_rotation_speed / (self.mass / 100)
         self.push_strength = self.max_push_strength / (self.mass / 125)
 

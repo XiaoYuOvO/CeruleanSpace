@@ -7,7 +7,7 @@ from cerulean_space.util.position_method import ABSOLUTE
 
 class GameWinScreen(WorldRenderer):
     def render(self, game_renderer: GameRenderer):
-        game_renderer.draw_string_centered("你赢了！",
+        game_renderer.draw_string_centered("任务完成！",
                                            round(game_renderer.get_rendering_width() / 2),
                                            round(game_renderer.get_rendering_height() / 2), 100, Color(128, 50, 50),
                                            ABSOLUTE)
