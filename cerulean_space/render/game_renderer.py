@@ -40,10 +40,12 @@ class GameRenderer:
     def draw_string_centered(self, content: str, x, y, size: float = 10,
                              color: pygame.Color = (255, 255, 255),
                              pos_method: PositionMethod = RELATIVE,
+                             transparency: int = 255,
                              rotation: int = 0,
                              style: int = STYLE_DEFAULT):
-        self.draw_surface_at(self.font_renderer.surface_from_font(content, size, rotation, style, color), x, y,
-                             pos_method)
+        text = self.font_renderer.surface_from_font(content, size, rotation, style, color)
+        text.set_alpha(transparency)
+        self.draw_surface_at(text, x, y, pos_method)
 
     # 在屏幕上绘制字符串,字符串图像的左上角为(x,y)
     def draw_string_at(self, content: str, x: int, y: int, size: float = 10, color: pygame.Color = (255, 255, 255),

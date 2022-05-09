@@ -5,6 +5,7 @@ from typing import NoReturn, Tuple
 import pygame.math
 from pygame import Rect
 
+from cerulean_space.constants import RENDERING_HEIGHT
 from cerulean_space.io.codec import Codec
 
 
@@ -27,6 +28,9 @@ class Entity(metaclass=abc.ABCMeta):
     def get_bounding_box(self) -> Rect:
         pass
 
+    def can_despawn(self) -> bool:
+        return True
+
     def update_bounding_box(self):
         self.bounding_box = self.get_bounding_box()
 
@@ -41,6 +45,8 @@ class Entity(metaclass=abc.ABCMeta):
             self.rad_rotation = math.radians(self.rotation)
             self.set_pos((self.__x + self.velocity.x + self.forward_vec * math.sin(self.rad_rotation),
                           self.__y + self.velocity.y + self.forward_vec * math.cos(self.rad_rotation)))
+            if self.__y < self.world.player.__y - RENDERING_HEIGHT and self.can_despawn():
+                self.remove()
             self.tick_exist += 1
             self.living_tick()
         pass

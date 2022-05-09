@@ -1,10 +1,12 @@
 from typing import TypeVar, Callable, Dict, Any
 
 from cerulean_space.entity.entity import Entity
+from cerulean_space.entity.garbage_entity import GarbageEntity
 from cerulean_space.entity.plane_entity import PlaneEntity
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.entity.rock_entity import RockEntity
 from cerulean_space.entity.cloud_entity import CloudEntity
+from cerulean_space.entity.space_station_entity import SpaceStationEntity
 
 T = TypeVar("T", bound=Entity)
 
@@ -29,3 +31,5 @@ register_entity_type(PlayerEntity)
 register_entity_type(RockEntity)
 register_entity_type(PlaneEntity)
 register_entity_type(CloudEntity)
+register_entity_type(GarbageEntity)
+register_entity_type(SpaceStationEntity)
