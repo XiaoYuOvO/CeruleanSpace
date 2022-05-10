@@ -45,7 +45,6 @@ class EntityRenderDispatcher(WorldRenderer):
         self.register_renderer(GarbageEntity, GarbageRenderer(texture_manager))
         self.register_renderer(SpaceStationEntity, SpaceStationRenderer(texture_manager))
         self.register_renderer(OilBucketEntity, OilBucketRenderer(texture_manager))
-        pass
 
     T = TypeVar("T", bound=Entity)
 

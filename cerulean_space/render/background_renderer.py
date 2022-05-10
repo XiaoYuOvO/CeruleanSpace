@@ -22,4 +22,3 @@ class BackgroundRenderer(WorldRenderer):
                                                       self.texture_size[1])),
                                              width=1920)
         game_renderer.draw_surface_on_rect(self.texture, texture_rect)
-        pass

@@ -54,7 +54,6 @@ class World:
 
     def add_hover_text(self, text: HoverText):
         self.hover_texts.append(text)
-        pass
 
     def tick(self):
         for e in self.entities:
@@ -96,7 +95,7 @@ class World:
         else:
             self.game_win()
 
-    def try_commit_collecting(self):
+    def try_predicate_win(self):
         if self.garbage_collected >= MIN_GARBAGE_COUNT_TO_WIN:
             self.game_win()
 

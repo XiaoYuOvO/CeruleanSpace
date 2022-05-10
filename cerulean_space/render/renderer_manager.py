@@ -26,7 +26,6 @@ class RendererManager:
         for renderer in self.worldRenderers:
             renderer.render(self.game_renderer)
         self.game_renderer.update_screen()
-        pass
 
     def add_renderer(self, renderer: WorldRenderer):
         self.worldRenderers.append(renderer)

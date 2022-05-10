@@ -77,7 +77,6 @@ class PlayerEntity(LivingEntity):
     def switch_to_collect_mode(self):
         self.lock_rotation = False
         self.max_y = PLAYER_COLLECT_MAX_HEIGHT
-        pass
 
     def start_collect_mode(self):
         self.min_y = PLAYER_COLLECT_MIN_HEIGHT
