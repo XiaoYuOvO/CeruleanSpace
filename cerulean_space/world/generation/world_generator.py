@@ -25,7 +25,7 @@ class WorldGenerator:
 
     @staticmethod
     def generate_rocks_in_space(world: World, count: int, rand: Random):
-        WorldGenerator.generate_in_range(world, count, rand, range(32000, 46000), SpawnFactories.ROCK_SPAWN_SPACE)
+        WorldGenerator.generate_in_range(world, count, rand, range(32000, 50000), SpawnFactories.ROCK_SPAWN_SPACE)
 
     @staticmethod
     def generate_clouds(world: World, count: int, rand: Random):
@@ -56,35 +56,9 @@ class WorldGenerator:
         WorldGenerator.generate_planes_in_low_range(world, 20, rand)
         WorldGenerator.generate_rocks_in_middle_range(world, 30, rand)
         WorldGenerator.generate_clouds(world, 100, rand)
-        WorldGenerator.generate_rocks_in_space(world, 100, rand)
+        WorldGenerator.generate_rocks_in_space(world, 130, rand)
         WorldGenerator.generate_garbage(world, 50, rand)
         WorldGenerator.generate_space_station(world, 1, rand)
-        WorldGenerator.generate_oil_bucket(world,10,rand)
+        WorldGenerator.generate_oil_bucket(world, 10, rand)
         # world.add_entity(PlayerEntity(world))
         return world
-
-
-class Coordinate:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
-
-    def __iter__(self):
-        return [self.x, self.y]
-
-    def __get_random_coordinate(self, offset):
-        while True:
-            yield Coordinate(self.rand.randrange(0, 100), self.rand.randrange(offset, offset + self.part_height))
-    #
-    # def create_world(self):
-    #     """
-    #     创建一个新的世界，按照世界高度划分区域并随机生成实体
-    #     :return:
-    #     """
-    #     for i in range(0, 9):
-    #         for each in self.__get_random_coordinate(self.part_height * i):
-    #             for _ in range(0, i * self.part_amount):
-    #                 self.add_entity(Entity(self), each)

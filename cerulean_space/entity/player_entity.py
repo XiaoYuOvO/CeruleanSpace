@@ -46,9 +46,9 @@ class PlayerEntity(LivingEntity):
 
     def update_mass(self):
         self.mass = self.fuel * 0.7 + self.collected_garbage + self.base_mass
-        self.min_speed = 2.0 / MathHelper.max(self.mass / 100, 1)
-        self.rotation_speed = self.max_rotation_speed / (self.mass / 100)
-        self.push_strength = self.max_push_strength / (self.mass / 125)
+        self.min_speed = 2.0 / MathHelper.max(self.mass / 80, 1)
+        self.rotation_speed = self.max_rotation_speed / (self.mass / 80)
+        self.push_strength = self.max_push_strength / (self.mass / 100)
 
     def can_collect(self,amount: int) -> bool:
         return self.get_max_garbage() - self.collected_garbage >= amount
@@ -86,10 +86,10 @@ class PlayerEntity(LivingEntity):
         self.world.game_over()
 
     def get_default_health(self) -> float:
-        return 100.0
+        return 80.0
 
     def get_max_health(self) -> float:
-        return 100.0
+        return 80.0
 
     def push_reward(self):
         self.forward_vec = MathHelper.max(self.forward_vec - self.push_strength, self.min_speed)
@@ -111,10 +111,6 @@ class PlayerEntity(LivingEntity):
             self.rotation = MathHelper.min(self.max_rotation, self.rotation + 3)
         else:
             self.rotation = self.rotation + self.rotation_speed
-
-    def on_collided_with(self, other) -> NoReturn:
-        # print(f'Player collided with {type(other)}')
-        pass
 
     def write_to_json(self) -> dict:
         data = super(PlayerEntity, self).write_to_json()

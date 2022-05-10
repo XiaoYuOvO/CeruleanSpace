@@ -3,7 +3,7 @@ from typing import Callable, Dict, Any
 
 from cerulean_space.constants import PLAYER_MAX_X, PLAYER_MIN_X
 from cerulean_space.entity.cloud_entity import CloudEntity
-from cerulean_space.entity.garbage_entity import GarbageEntity
+from cerulean_space.entity.garbage_entity import GarbageEntity, GarbageTypes
 from cerulean_space.entity.oil_bucket_entity import OilBucketEntity
 from cerulean_space.entity.plane_entity import PlaneEntity, DIRECTION_RIGHT, DIRECTION_LEFT
 from cerulean_space.entity.rock_entity import RockEntity
@@ -60,6 +60,7 @@ def on_garbage_spawn(world: Any, rand: Random, spawn_y):
         garbage.velocity.x = rand.random() * rand.randint(-3, 3)
     if rand.randint(0, 1) == 0:
         garbage.velocity.y = rand.random() * rand.randint(-3, 3)
+    garbage.set_type(GarbageTypes.VALUES[rand.randint(0, GarbageTypes.VALUES.__len__() - 1)])
     world.add_entity(garbage)
 
 

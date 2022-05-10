@@ -1,3 +1,7 @@
-风向干扰
-任务系统
-燃油重量
+//Replace the texture of rocket and rubbish
+Add a ground to background
+Extend the size of collecting area
+//Increase the influence of weight to the controlling
+//Add rocks to the top of sky
+Make variants for rubbish
+//Decrease the health of player
