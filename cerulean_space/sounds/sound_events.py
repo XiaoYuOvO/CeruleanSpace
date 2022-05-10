@@ -19,5 +19,5 @@ class SoundEvents:
 
     @staticmethod
     def play_bgm():
-        pygame.mixer.music.load("./sounds/" + "bgm.mp3")
+        pygame.mixer.music.load("./sounds/bgm.mp3")
         pygame.mixer.music.play(-1)

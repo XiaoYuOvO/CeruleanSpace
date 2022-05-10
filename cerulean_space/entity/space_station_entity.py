@@ -9,7 +9,6 @@ from cerulean_space.entity.player_entity import PlayerEntity
 class SpaceStationEntity(Entity):
     def __init__(self, world):
         super().__init__(world)
-        self.garbage_received = 0
 
     @staticmethod
     def get_codec_name() -> str:
@@ -21,10 +20,11 @@ class SpaceStationEntity(Entity):
     def on_collided_with(self, other) -> NoReturn:
         if type(other) is PlayerEntity:
             player: PlayerEntity = other
-            self.garbage_received += player.collected_garbage
-            self.world.garbage_collected = self.garbage_received
-            player.collected_garbage = 0
-            player.update_mass()
+            if player.collected_garbage > 0:
+                self.world.garbage_collected += player.collected_garbage
+                player.collected_garbage = 0
+                player.update_mass()
+                self.world.try_commit_collecting()
 
     def can_despawn(self) -> bool:
         return False

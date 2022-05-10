@@ -17,7 +17,7 @@ class GameRenderer:
         self.draw_offset_x: float = 0
         self.draw_offset_y: float = 0
         self.screen = pygame.display.set_mode((width, height), flags=pygame.HWSURFACE | pygame.RESIZABLE)
-        pygame.display.set_caption("蔚蓝深空")
+        pygame.display.set_caption("蔚蓝浩空")
         self.render_scale = 1
         self.font_renderer = FontRenderer(DEFAULT_FONT_NAME)
         self.canvas = Surface((RENDERING_WIDTH, RENDERING_HEIGHT))

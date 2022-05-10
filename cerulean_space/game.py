@@ -11,6 +11,7 @@ from cerulean_space.io.world_storage import WorldStorage
 from cerulean_space.render.camera_renderer import CameraRenderer
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.renderer_manager import RendererManager
+from cerulean_space.render.ui.hover_text import HoverText
 from cerulean_space.settings.game_settings import GameSettings
 from cerulean_space.sounds.sound_events import SoundEvents
 from cerulean_space.world.generation.world_generator import WorldGenerator
@@ -31,13 +32,6 @@ class CeruleanSpace:
             self.world = WorldGenerator.generate_world(Random(), self)
             self.player = PlayerEntity(self.world)
             self.world.add_entity(self.player)
-        # self.world.add_entity(self.player)
-        # testrock = RockEntity(self.world)
-        # testrock2 = RockEntity(self.world)
-        # testrock.set_pos((0, 500))
-        # testrock2.set_pos((0, 1000))
-        # self.world.add_entity(testrock2)
-        # self.world.add_entity(testrock)
         self.player = self.world.player
         self.renderer_manager.init_all_renders(self.world, self.player)
         self.camera_renderer = CameraRenderer(self.world, self.renderer_manager.textureManager, self.player)
@@ -75,12 +69,8 @@ class CeruleanSpace:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            # if event.type == pygame.WINDOWRESIZED:
-            # if event.type == pygame.KEYDOWN:
-            #     self.keyboard.handle_key_event(event.key)
 
     def register_key_callbacks(self, game_settings: GameSettings):
-        # 由于渲染器的坐标系是以左上角为原点的所以实际是反向的
         def handle_key_forward():
             self.player.push_forward()
 
@@ -95,6 +85,10 @@ class CeruleanSpace:
 
         def handle_save_world():
             WorldStorage.write_world_to_file(self.settings.world_file, self.world)
+            self.world.add_hover_text(HoverText("世界已保存",
+                                                round(self.game_renderer.get_rendering_width() / 2),
+                                                round(self.game_renderer.get_rendering_height() / 3),
+                                                60,50))
 
         self.keyboard.register_key(game_settings.key_forward, handle_key_forward)
         self.keyboard.register_key(game_settings.key_reward, handle_key_reward)

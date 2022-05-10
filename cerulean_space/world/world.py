@@ -82,7 +82,7 @@ class World:
     def add_particle(self, particle_type: ParticleType, parameter: ParticleParameter):
         self.particle_manager.add_particle(particle_type.create_particle(self, parameter))
 
-    def get_collided_entity(self, entity) -> List:
+    def get_collided_entity(self, entity) -> List[Entity]:
         result = list()
         for e in self.entities:
             if e is not entity and not e.no_collide() and entity.bounding_box.colliderect(e.bounding_box):
