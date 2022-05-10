@@ -36,3 +36,4 @@ class LivingEntity(Entity, metaclass=abc.ABCMeta):
 
     def on_death(self):
         pass
+

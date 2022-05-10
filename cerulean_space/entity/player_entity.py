@@ -77,7 +77,6 @@ class PlayerEntity(LivingEntity):
     def switch_to_collect_mode(self):
         self.lock_rotation = False
         self.max_y = PLAYER_COLLECT_MAX_HEIGHT
-        pass
 
     def start_collect_mode(self):
         self.min_y = PLAYER_COLLECT_MIN_HEIGHT
@@ -89,7 +88,7 @@ class PlayerEntity(LivingEntity):
         return 100.0
 
     def get_max_health(self) -> float:
-        return 100.0
+        return 1000.0
 
     def push_reward(self):
         self.forward_vec = MathHelper.max(self.forward_vec - self.push_strength, self.min_speed)
@@ -111,10 +110,6 @@ class PlayerEntity(LivingEntity):
             self.rotation = MathHelper.min(self.max_rotation, self.rotation + 3)
         else:
             self.rotation = self.rotation + self.rotation_speed
-
-    def on_collided_with(self, other) -> NoReturn:
-        # print(f'Player collided with {type(other)}')
-        pass
 
     def write_to_json(self) -> dict:
         data = super(PlayerEntity, self).write_to_json()

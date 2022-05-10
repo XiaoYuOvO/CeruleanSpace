@@ -1,5 +1,3 @@
-import os
-
 from cerulean_space.gui.game_window import *
 
 if __name__ == '__main__':

@@ -35,6 +35,7 @@ class GarbageEntity(Entity):
             if player.can_collect(self.__amount):
                 player.collected_garbage += self.__amount
                 player.update_mass()
+                self.world.try_predicate_win()
                 SoundEvents.DING.play()
                 self.remove()
 

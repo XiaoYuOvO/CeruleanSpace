@@ -52,7 +52,6 @@ class Entity(metaclass=abc.ABCMeta):
                 self.remove()
             self.tick_exist += 1
             self.living_tick()
-        pass
 
     def set_pos(self, pos: Tuple[float, float]) -> NoReturn:
         self.__x = pos[0]
@@ -84,7 +83,6 @@ class Entity(metaclass=abc.ABCMeta):
         self.tick_exist = data["tick_exist"]
         self.mass = data["mass"]
         self.removed = data["removed"]
-        pass
 
     def write_to_json(self) -> dict:
         return {

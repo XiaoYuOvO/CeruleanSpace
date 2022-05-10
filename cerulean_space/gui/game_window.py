@@ -10,10 +10,6 @@ settings = GameSettings()
 name_of_save = "NewGame"
 
 
-def new_game():
-    if os.path.exists(settings.world_file):
-        pass
-
 
 def scan_save():
     reg = re.compile(".*?\\.json")
@@ -23,7 +19,6 @@ def scan_save():
         for each in file_names:
             if reg.match(each) is not None:
                 files.append(each)
-    print(files)
     return files
 
 
