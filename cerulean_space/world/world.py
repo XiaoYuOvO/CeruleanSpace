@@ -1,12 +1,9 @@
 from random import Random
-from typing import List, Any, NoReturn, Dict
+from typing import List, NoReturn
 
-from pygame import Rect
-from pygame.draw_py import BoundingBox
-
-from cerulean_space.constants import PLAYER_COLLECT_MAX_HEIGHT, COLLECT_MODE_TIME, MIN_GARBAGE_COUNT_TO_WIN
+from cerulean_space.constants import COLLECT_MODE_TIME, MIN_GARBAGE_COUNT_TO_WIN
 from cerulean_space.entity.entity import Entity
-from cerulean_space.entity.entity_types import EntityType, ENTITY_TYPES
+from cerulean_space.entity.entity_types import ENTITY_TYPES
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.render.particle.particle_manager import ParticleManager
 from cerulean_space.render.particle.particle_parameter import ParticleParameter
@@ -15,7 +12,7 @@ from cerulean_space.render.ui.hover_text import HoverText
 from cerulean_space.world.game_mode import GameModes
 from cerulean_space.world.generation.entity_spawner import EntitySpawner
 from cerulean_space.world.generation.spawn_entry import SpawnEntry
-from cerulean_space.world.generation.spawn_factory import SpawnFactories, FACTORIES
+from cerulean_space.world.generation.spawn_factory import FACTORIES
 
 
 class World:

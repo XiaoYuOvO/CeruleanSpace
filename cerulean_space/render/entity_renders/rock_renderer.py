@@ -5,7 +5,7 @@ from cerulean_space.entity.rock_entity import RockEntity
 from cerulean_space.render.entity_renders.entity_renderer import EntityRenderer
 from cerulean_space.util.identifier import Identifier
 
-rock_texture = Identifier("rock.png")
+rock_texture = Identifier("rock2.png")
 
 
 class RockRenderer(EntityRenderer[RockEntity]):

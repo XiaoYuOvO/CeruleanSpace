@@ -10,7 +10,6 @@ settings = GameSettings()
 name_of_save = "NewGame"
 
 
-
 def scan_save():
     reg = re.compile(".*?\\.json")
     path = "../../"
