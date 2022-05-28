@@ -50,7 +50,10 @@ def continue_dialog():
         return
 
     settings.world_file = "../{}".format(name_of_save)
-    CeruleanSpace(settings).start_game_loop()
+    try:
+        CeruleanSpace(settings).start_game_loop()
+    except BaseException as err:
+        pass
 
 
 def setting_dialog():
@@ -358,3 +361,7 @@ def run():
     w.draw_mainmenu()
     w.mainloop()
     w.quit()
+
+
+if __name__ == '__main__':
+    os.chdir("../../")

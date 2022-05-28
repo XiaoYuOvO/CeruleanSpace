@@ -1,5 +1,3 @@
-from typing import Tuple
-
 import pygame
 from pygame import Surface
 
@@ -8,7 +6,7 @@ from cerulean_space.render.particle.particle_parameter import ParticleParameter
 
 
 class PlaneParticleParameter(ParticleParameter):
-    def __init__(self, x: float, y: float, vec: pygame.Vector2, lifetime: int,left_part: bool,left_to_right: bool):
+    def __init__(self, x: float, y: float, vec: pygame.Vector2, lifetime: int, left_part: bool, left_to_right: bool):
         super().__init__(x, y, vec, lifetime)
         self.left_part = left_part
         self.left_to_right = left_to_right

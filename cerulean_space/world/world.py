@@ -1,15 +1,16 @@
 from random import Random
 from typing import List, NoReturn
 
-from cerulean_space.constants import COLLECT_MODE_TIME, MIN_GARBAGE_COUNT_TO_WIN
-from cerulean_space.entity.entity import Entity
+import cerulean_space
+import cerulean_space.entity.entity as et
+import cerulean_space.world.game_mode.game_modes as game_modes_file
 from cerulean_space.entity.entity_types import ENTITY_TYPES
-from cerulean_space.entity.player_entity import PlayerEntity
+from cerulean_space.entity.player_entity import PlayerEntity, PlayerAttributeBuilder
 from cerulean_space.render.particle.particle_manager import ParticleManager
 from cerulean_space.render.particle.particle_parameter import ParticleParameter
 from cerulean_space.render.particle.particle_types import ParticleType
 from cerulean_space.render.ui.hover_text import HoverText
-from cerulean_space.world.game_mode import GameModes
+from cerulean_space.world.game_mode.game_mode import GameMode
 from cerulean_space.world.generation.entity_spawner import EntitySpawner
 from cerulean_space.world.generation.spawn_entry import SpawnEntry
 from cerulean_space.world.generation.spawn_factory import FACTORIES
@@ -26,23 +27,18 @@ class World:
 
         """
         self.rand: Random = Random()
-        self.wind_force = 0.0
-        self.time_to_next_wind_force = 0
-        self.player = PlayerEntity(self)
+        self.player: PlayerEntity = PlayerEntity(self)
         # 实体列表,全部继承Entity
-        self.entities: List[Entity] = list()
-
-        self.weight = 100
-        self.height = 100000
-        self.game = game_instance
+        self.entities: List[et.Entity] = list()
+        self.weight: int = 100
+        self.height: int = 100000
+        self.game: 'cerulean_space.game.CeruleanSpace' = game_instance
         self.entity_spawner = EntitySpawner(self)
         self.particle_manager = ParticleManager()
-        self.game_mode = GameModes.FLY
+        self.game_mode: GameMode = game_modes_file.GameModes.FLY
         self.hover_texts: List[HoverText] = list()
-        self.collect_time = COLLECT_MODE_TIME
-        self.garbage_collected = 0
 
-    def add_entity(self, entity: Entity):
+    def add_entity(self, entity: 'cerulean_space.entity.entity.Entity'):
         # if coordinate not in self.entities.key-s():
         if type(entity) is PlayerEntity:
             self.player = entity
@@ -55,8 +51,6 @@ class World:
     def tick(self):
         for e in self.entities:
             e.tick()
-            if e.tick_exist % 5 == 0:
-                e.set_pos((e.get_x() + self.wind_force, e.get_y()))
             if e.removed:
                 self.entities.remove(e)
         self.entity_spawner.tick_spawn(self.rand, self.player)
@@ -65,60 +59,17 @@ class World:
             t.display_time -= 1
             if t.display_time <= 0:
                 self.hover_texts.remove(t)
-        if not self.is_collect_mode():
-            if self.time_to_next_wind_force <= 0:
-                self.wind_force = self.rand.randrange(-5, 5)
-                self.time_to_next_wind_force = self.rand.randrange(300, 1800)
-            else:
-                self.time_to_next_wind_force -= 1
-        if self.is_collect_mode() and self.collect_time >= 0:
-            self.collect_time -= 1
-            if self.collect_time <= 0:
-                self.finish_collect()
+        self.game_mode.tick_game_mode(self)
 
     def add_particle(self, particle_type: ParticleType, parameter: ParticleParameter):
         self.particle_manager.add_particle(particle_type.create_particle(self, parameter))
 
-    def get_collided_entity(self, entity) -> List[Entity]:
+    def get_collided_entity(self, entity) -> List[et.Entity]:
         result = list()
         for e in self.entities:
             if e is not entity and not e.no_collide() and entity.bounding_box.colliderect(e.bounding_box):
                 result.append(e)
         return result
-
-    def finish_collect(self):
-        if self.garbage_collected < MIN_GARBAGE_COUNT_TO_WIN:
-            self.collect_failed()
-        else:
-            self.game_win()
-
-    def try_predicate_win(self):
-        if self.garbage_collected >= MIN_GARBAGE_COUNT_TO_WIN:
-            self.game_win()
-
-    def is_collect_mode(self) -> bool:
-        return self.game_mode is GameModes.COLLECT
-
-    def init_game_mode(self):
-        if self.is_collect_mode():
-            self.start_with_collect_mode()
-
-    def switch_to_collect_mode(self):
-        self.player.switch_to_collect_mode()
-        self.add_hover_text(HoverText("你已成功飞入太空！",
-                                      self.game.game_renderer.get_rendering_width() / 2,
-                                      self.game.game_renderer.get_rendering_height() / 3, 300, 50))
-        self.game.unlock_camera()
-        self.wind_force = 0
-
-    def start_collect_mode(self):
-        self.player.start_collect_mode()
-        self.game.lock_camera()
-        self.wind_force = 0
-        self.game_mode = GameModes.COLLECT
-        self.add_hover_text(HoverText("在有限的时间内收集足够的太空垃圾！",
-                                      self.game.game_renderer.get_rendering_width() / 2,
-                                      self.game.game_renderer.get_rendering_height() / 3, 300, 50))
 
     def start_with_collect_mode(self):
         self.add_hover_text(HoverText("在有限的时间内收集足够的太空垃圾！",
@@ -139,12 +90,10 @@ class World:
             self.entity_spawner.spawn_list.append(SpawnEntry(spawn_entry_data.get("spawn_y"),
                                                              FACTORIES.get(
                                                                  spawn_entry_data.get("factory"))))
-        self.game_mode = GameModes[(data.get("game_mode"))]
-        self.wind_force = data.get("wind_force")
-        self.collect_time = data.get("collect_time")
-        self.garbage_collected = data.get("garbage_collected")
-        self.time_to_next_wind_force = data.get("time_to_next_wind_force")
-        self.init_game_mode()
+        gamemode = game_modes_file.GameModes.get_from_name(data.get("game_mode"))
+        self.switch_to_mode(gamemode)
+        self.game_mode = gamemode
+        self.game_mode.read_from_json(data.get("game_mode_data"))
 
     def write_world(self) -> dict:
         result = dict()
@@ -162,11 +111,8 @@ class World:
             })
         result["spawn_entries"] = spawn_entries
         result["entities"] = entities
-        result["wind_force"] = self.wind_force
-        result["game_mode"] = self.game_mode.name
-        result["collect_time"] = self.collect_time
-        result["garbage_collected"] = self.garbage_collected
-        result['time_to_next_wind_force'] = self.time_to_next_wind_force
+        result["game_mode"] = self.game_mode.get_name()
+        result["game_mode_data"] = self.game_mode.write_to_json()
         return result
 
     def add_spawn_entry(self, entry):
@@ -178,5 +124,11 @@ class World:
     def game_over(self):
         self.game.game_over()
 
-    def collect_failed(self):
-        self.game.collect_failed()
+    def collect_failed(self, garbage_collected: int):
+        self.game.collect_failed(garbage_collected)
+
+    def switch_to_mode(self, gamemode):
+        if gamemode is not self.game_mode:
+            self.game_mode.on_mode_end(self)
+            self.game_mode = gamemode
+            self.game_mode.on_mode_start(self)

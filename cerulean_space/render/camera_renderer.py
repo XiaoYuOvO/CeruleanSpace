@@ -10,17 +10,10 @@ from cerulean_space.world.world import World
 class CameraRenderer(WorldRenderer):
     def __init__(self, world: World, texture_manager: TextureManager, player: PlayerEntity):
         super().__init__(world, texture_manager)
-        self.locked = True
         self.player = player
 
     def render(self, game_renderer: GameRenderer):
-        if self.locked:
+        if self.world.game_mode.camera_locked():
             game_renderer.set_draw_offset(
                 PLAYER_MAX_X,
                 self.player.get_y() + (game_renderer.get_rendering_height()) / 4 * 3)
-
-    def lock(self):
-        self.locked = True
-
-    def unlock(self):
-        self.locked = False

@@ -21,10 +21,9 @@ class SpaceStationEntity(Entity):
         if type(other) is PlayerEntity:
             player: PlayerEntity = other
             if player.collected_garbage > 0:
-                self.world.garbage_collected += player.collected_garbage
+                self.world.game_mode.garbage_collected += player.collected_garbage
                 player.collected_garbage = 0
                 player.update_mass()
-                self.world.try_commit_collecting()
 
     def can_despawn(self) -> bool:
         return False

@@ -5,12 +5,23 @@ from pygame import Rect
 
 from cerulean_space.entity.living_entity import LivingEntity
 from cerulean_space.entity.player_entity import PlayerEntity
-from cerulean_space.render.particle.particle_parameter import ParticleParameter
 from cerulean_space.render.particle.particle_types import PLANE_CHUNK
 from cerulean_space.render.particle.plane_chunk_particle import PlaneParticleParameter
+from cerulean_space.render.texture.stated_texture import TextureState
 
-DIRECTION_LEFT = -1
-DIRECTION_RIGHT = 1
+
+class PlaneDirection(TextureState):
+    def __init__(self, name: str):
+        self.name: str = name
+
+    def __hash__(self):
+        return self.name.__hash__()
+
+    def __eq__(self, other):
+        return type(other) is PlaneDirection and other.name == self.name
+
+DIRECTION_LEFT = PlaneDirection("left")
+DIRECTION_RIGHT = PlaneDirection("right")
 
 
 class PlaneEntity(LivingEntity):
@@ -34,8 +45,6 @@ class PlaneEntity(LivingEntity):
     def on_collided_with(self, other) -> NoReturn:
         if type(other) is PlayerEntity:
             other.damage(10)
-            count = 3
-            rand: Random = self.world.rand
             # for i in range(-count, count):
             left_to_right = False
             if self.direction == DIRECTION_LEFT:
@@ -59,3 +68,12 @@ class PlaneEntity(LivingEntity):
                                                                40, True, left_to_right))
 
             self.remove()
+
+    def read_from_json(self, data: dict):
+        super(PlaneEntity, self).read_from_json(data)
+        self.direction = PlaneDirection(data["direction"])
+
+    def write_to_json(self) -> dict:
+        data = super(PlaneEntity, self).write_to_json()
+        data["direction"] = self.direction.name
+        return data

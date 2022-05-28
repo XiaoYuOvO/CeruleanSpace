@@ -69,6 +69,7 @@ def on_space_station_spawn(world: Any, rand: Random, spawn_y):
     space_station.set_pos((PLAYER_MAX_X / 2 + rand.randint(-50, 50), spawn_y))
     world.add_entity(space_station)
 
+
 def on_oil_bucket_spawn(world: Any, rand: Random, spawn_y):
     oil_bucket = OilBucketEntity(world)
     oil_bucket.set_pos((PLAYER_MAX_X / 2 + rand.randint(-50, 50), spawn_y))

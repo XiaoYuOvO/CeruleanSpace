@@ -5,13 +5,14 @@ from typing import NoReturn, Tuple
 import pygame.math
 from pygame import Rect
 
+import cerulean_space
 from cerulean_space.constants import RENDERING_HEIGHT
 from cerulean_space.io.codec import Codec
 
 
 class Entity(metaclass=abc.ABCMeta):
 
-    def __init__(self, world):
+    def __init__(self, world: 'cerulean_space.world.world.World'):
         self.bounding_box = self.get_bounding_box()
         self.world = world
         self.velocity = pygame.math.Vector2(0.0, 0.0)

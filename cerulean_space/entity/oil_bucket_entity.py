@@ -14,7 +14,7 @@ class OilBucketEntity(Entity):
     def on_collided_with(self, other) -> NoReturn:
         if type(other) is PlayerEntity:
             player: PlayerEntity = other
-            player.fuel = MathHelper.min(player.get_max_fuel(), player.fuel + 50)
+            player.attribute.fuel = MathHelper.min(player.get_max_fuel(), player.attribute.fuel + 50)
             self.remove()
 
     def can_despawn(self) -> bool:

@@ -1,5 +1,3 @@
-from typing import Callable
-
 from cerulean_space.world.generation.spawn_factory import SpawnFactory
 
 

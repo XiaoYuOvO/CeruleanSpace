@@ -1,4 +1,4 @@
-from pygame import Rect, Vector2
+from pygame import Vector2
 
 
 class Codec:

@@ -1,5 +1,3 @@
-from cerulean_space.util.identifier import Identifier
-
 TEXTURE_DIR = '../img'
 DEFAULT_FONT_NAME = "./font/simfang.ttf"
 BACKGROUND_SCALE = 0.2

@@ -2,7 +2,6 @@ from random import Random
 from typing import NoReturn
 
 from pygame import Rect
-from pygame.draw_py import BoundingBox
 
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.player_entity import PlayerEntity

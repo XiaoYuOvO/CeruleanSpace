@@ -16,6 +16,9 @@ class LivingEntity(Entity, metaclass=abc.ABCMeta):
     def get_max_health(self) -> float:
         pass
 
+    def update_max_health(self):
+        self.health = self.get_default_health()
+
     def damage(self, damage: float):
         self.health -= damage
 
@@ -36,4 +39,3 @@ class LivingEntity(Entity, metaclass=abc.ABCMeta):
 
     def on_death(self):
         pass
-

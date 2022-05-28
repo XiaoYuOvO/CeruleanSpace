@@ -1,6 +1,6 @@
 from typing import Callable, TypeVar, Generic, List, Any
 
-from pygame import Vector2, Surface
+from pygame import Surface
 
 from cerulean_space.render.particle.fire_particle import FireParticle
 from cerulean_space.render.particle.particle import Particle

@@ -1,9 +1,8 @@
 from cerulean_space.render.game_renderer import GameRenderer
-from cerulean_space.render.particle.particle_manager import ParticleManager
+from cerulean_space.render.particle.particle_types import load_particle_textures
 from cerulean_space.render.texture_manager import TextureManager
 from cerulean_space.render.world_renderer import WorldRenderer
 from cerulean_space.world.world import World
-from cerulean_space.render.particle.particle_types import load_particle_textures
 
 
 class ParticleRenderer(WorldRenderer):

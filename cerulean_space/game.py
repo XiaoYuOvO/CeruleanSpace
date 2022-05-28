@@ -1,14 +1,15 @@
 import os.path
 import threading
+import traceback
 from random import Random
+from tkinter.messagebox import showerror
 
 import pygame.time
 
-from cerulean_space.constants import PLAYER_MAX_X, GAME_TICK_RATE
+from cerulean_space.constants import GAME_TICK_RATE
 from cerulean_space.entity.player_entity import PlayerEntity
 from cerulean_space.input.keyboard import Keyboard
 from cerulean_space.io.world_storage import WorldStorage
-from cerulean_space.render.camera_renderer import CameraRenderer
 from cerulean_space.render.game_renderer import GameRenderer
 from cerulean_space.render.renderer_manager import RendererManager
 from cerulean_space.render.ui.hover_text import HoverText
@@ -21,21 +22,28 @@ lock = threading.Lock()
 
 class CeruleanSpace:
     def __init__(self, settings: GameSettings):
-        self.running = False
-        self.settings = settings
-        self.game_renderer: GameRenderer = GameRenderer(settings.game_window_width, settings.game_window_height)
-        self.keyboard = Keyboard()
-        self.renderer_manager = RendererManager(self.game_renderer)
         if os.path.exists(settings.world_file):
-            self.world = WorldStorage.read_world_from_file(settings.world_file, self)
+            try:
+                self.world = WorldStorage.read_world_from_file(settings.world_file, self)
+            except KeyError as err:
+                self.world = WorldGenerator.generate_world(Random(), self)
+                self.player = PlayerEntity(self.world)
+                self.world.add_entity(self.player)
+                showerror("世界加载错误", "无法加载世界" + settings.world_file.__str__() + ": " + err.__str__())
+                traceback.print_exc()
+                raise err
         else:
             self.world = WorldGenerator.generate_world(Random(), self)
             self.player = PlayerEntity(self.world)
             self.world.add_entity(self.player)
+        self.running = False
+        self.is_game_over = False
+        self.settings = settings
+        self.game_renderer: GameRenderer = GameRenderer(settings.game_window_width, settings.game_window_height)
+        self.keyboard = Keyboard()
+        self.renderer_manager = RendererManager(self.game_renderer)
         self.player = self.world.player
         self.renderer_manager.init_all_renders(self.world, self.player)
-        self.camera_renderer = CameraRenderer(self.world, self.renderer_manager.textureManager, self.player)
-        self.renderer_manager.add_renderer(self.camera_renderer)
         self.register_key_callbacks(settings)
         SoundEvents.play_bgm()
 
@@ -56,10 +64,11 @@ class CeruleanSpace:
         clock = pygame.time.Clock()
 
         def tick_world_tick():
-            while self.running:
+            while self.running and not self.is_game_over:
                 lock.acquire()
                 self.keyboard.tick()
                 self.world.tick()
+                self.renderer_manager.tick()
                 lock.release()
                 clock.tick(GAME_TICK_RATE)
 
@@ -72,23 +81,23 @@ class CeruleanSpace:
 
     def register_key_callbacks(self, game_settings: GameSettings):
         def handle_key_forward():
-            self.player.push_forward()
+            self.world.game_mode.get_interaction_manager().handle_up(self.player)
 
         def handle_key_reward():
-            self.player.push_reward()
+            self.world.game_mode.get_interaction_manager().handle_down(self.player)
 
         def handle_key_left():
-            self.player.rotate_left()
+            self.world.game_mode.get_interaction_manager().handle_left(self.player)
 
         def handle_key_right():
-            self.player.rotate_right()
+            self.world.game_mode.get_interaction_manager().handle_right(self.player)
 
         def handle_save_world():
             WorldStorage.write_world_to_file(self.settings.world_file, self.world)
             self.world.add_hover_text(HoverText("世界已保存",
                                                 round(self.game_renderer.get_rendering_width() / 2),
                                                 round(self.game_renderer.get_rendering_height() / 3),
-                                                60,50))
+                                                60, 50))
 
         self.keyboard.register_key(game_settings.key_forward, handle_key_forward)
         self.keyboard.register_key(game_settings.key_reward, handle_key_reward)
@@ -98,16 +107,12 @@ class CeruleanSpace:
 
     def game_win(self):
         self.renderer_manager.switch_to_game_win_screen(self.world)
+        self.is_game_over = True
 
     def game_over(self):
         self.renderer_manager.switch_to_game_over_screen(self.world)
+        self.is_game_over = True
 
-    def collect_failed(self):
-        self.renderer_manager.switch_to_collect_failed_screen(self.world)
-
-    def unlock_camera(self):
-        self.camera_renderer.unlock()
-
-    def lock_camera(self):
-        self.camera_renderer.lock()
-
+    def collect_failed(self, garbage_collected: int):
+        self.renderer_manager.switch_to_collect_failed_screen(self.world, garbage_collected)
+        self.is_game_over = True

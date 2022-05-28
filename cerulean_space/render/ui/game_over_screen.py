@@ -9,9 +9,9 @@ class GameOverScreen(WorldRenderer):
     def render(self, game_renderer: GameRenderer):
         game_renderer.draw_string_centered("任务失败！",
                                            round(game_renderer.get_rendering_width() / 2),
-                                           round(game_renderer.get_rendering_height() / 2), 100, Color(0, 0, 0),
+                                           round(game_renderer.get_rendering_height() / 2), 100, Color(255,255,255),
                                            ABSOLUTE)
         game_renderer.draw_string_centered("当前高度: " + self.world.player.get_y().__str__(),
                                            round(game_renderer.get_rendering_width() / 2),
-                                           round(game_renderer.get_rendering_height() / 3 * 2), 60, Color(0, 0, 0),
+                                           round(game_renderer.get_rendering_height() / 3 * 2), 60, Color(255,255,255),
                                            ABSOLUTE)

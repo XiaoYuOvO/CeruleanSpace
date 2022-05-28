@@ -1,8 +1,6 @@
 import abc
-from typing import TypeVar, Tuple, Any
 
-import pygame.transform
-from pygame import Vector2, Surface, Rect
+from pygame import Vector2, Surface
 
 
 # T = TypeVar("T", bound= Particle)

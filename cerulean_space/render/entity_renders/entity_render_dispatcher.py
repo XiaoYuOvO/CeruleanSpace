@@ -36,6 +36,11 @@ class EntityRenderDispatcher(WorldRenderer):
         # 注册所有实体的渲染器
         self.register_renderers(texture_manager)
 
+    def tick(self):
+        for entity in self.world.entities:
+            entity: Entity = entity
+            self.renderers.get(type(entity)).tick_texture()
+
     # 注册所有实体的渲染器
     def register_renderers(self, texture_manager: TextureManager):
         self.register_renderer(PlayerEntity, PlayerRenderer(texture_manager))

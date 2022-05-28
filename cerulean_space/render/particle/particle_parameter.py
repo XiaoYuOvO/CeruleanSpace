@@ -8,7 +8,7 @@ T = TypeVar("T", bound=Particle)
 
 
 class ParticleParameter(Generic[T]):
-    def __init__(self, x: float, y: float, vec: Vector2,lifetime: int):
+    def __init__(self, x: float, y: float, vec: Vector2, lifetime: int):
         self.x = x
         self.y = y
         self.vec = vec

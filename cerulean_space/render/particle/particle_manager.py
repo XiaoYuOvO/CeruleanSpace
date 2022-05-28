@@ -14,5 +14,5 @@ class ParticleManager:
             if particle.dead:
                 self.particle_list.remove(particle)
 
-    def add_particle(self,particle: Particle):
+    def add_particle(self, particle: Particle):
         self.particle_list.append(particle)

@@ -1,5 +1,3 @@
-from typing import Tuple
-
 import pygame.freetype
 from pygame import Color, Surface
 from pygame._freetype import STYLE_DEFAULT

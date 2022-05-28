@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import NoReturn, List
 
 from pygame import Rect, Surface
@@ -6,15 +5,22 @@ from pygame import Rect, Surface
 from cerulean_space.constants import PLAYER_MAX_X, PLAYER_MIN_X, PLAYER_COLLECT_MAX_HEIGHT, PLAYER_COLLECT_MIN_HEIGHT
 from cerulean_space.entity.entity import Entity
 from cerulean_space.entity.player_entity import PlayerEntity
+from cerulean_space.render.texture.stated_texture import TextureState
 from cerulean_space.sounds.sound_events import SoundEvents
 from cerulean_space.util.math.math_helper import MathHelper
 
 
-class GarbageType:
+class GarbageType(TextureState):
     def __init__(self, index: int, name: str):
         self.index = index
         self.name = name
         self.texture: Surface = None
+
+    def __hash__(self):
+        return self.name.__hash__()
+
+    def __eq__(self, other):
+        return type(other) is GarbageType and other.name is self.name
 
 
 class GarbageTypes:
@@ -58,7 +64,6 @@ class GarbageEntity(Entity):
             if player.can_collect(self.__amount):
                 player.collected_garbage += self.__amount
                 player.update_mass()
-                self.world.try_predicate_win()
                 SoundEvents.DING.play()
                 self.remove()
 
@@ -68,6 +73,7 @@ class GarbageEntity(Entity):
     def read_from_json(self, data: dict):
         super(GarbageEntity, self).read_from_json(data)
         self.__amount = data["amount"]
+        self.update_bounding_box()
 
     def write_to_json(self) -> dict:
         data = super(GarbageEntity, self).write_to_json()
